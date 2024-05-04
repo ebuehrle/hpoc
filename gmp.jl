@@ -1,4 +1,4 @@
-using MomentOpt, DynamicPolynomials, Hypatia
+using MomentOpt, DynamicPolynomials, Clarabel
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
@@ -22,7 +22,7 @@ E = [
 eout(i) = E[:,1] .== i
 einc(i) = E[:,2] .== i
 
-m = GMPModel(Hypatia.Optimizer)
+m = GMPModel(Clarabel.Optimizer)
 set_approximation_mode(m, PRIMAL_RELAXATION_MODE())
 set_approximation_degree(m, 2)
 b = monomials(x, 0:approximation_degree(m))
@@ -36,3 +36,6 @@ dbdt = differentiate(b, x) * f(x,u)
 @constraint m [i in [2,4]] sum(μ[eout(i),1]) == sum(μ[einc(i),3])
 
 optimize!(m)
+println(objective_value(m))
+p = integrate.(1,μ[:,1])
+println(p)
