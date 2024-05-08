@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.4.5)  8 MAY 2024 09:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.4.5)  8 MAY 2024 16:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -267,12 +267,22 @@ Package pdftex.def Info: ../img/miqp2.pdf  used on input line 16.
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./sp-lp.png> <./spp.JPEG> 
 <../img/miqp1.pdf>]
-(../img/gmp2.txt) (../img/gmp.txt)
+(../img/gmp2.txt) (../img/gmp.txt) (../img/gmpp.txt)
+Overfull \hbox (76.08446pt too wide) in paragraph at lines 21--22
+[]\OT1/cmr/m/n/10 Path [9.579744885314905e-7, 9.57974555007202e-7, 0.9999990420
+255486, 0.9999990420255576]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+
+ []
+
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 22.
+(Font)              <7> on input line 24.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 22.
- [2 <../img/miqp2.pdf>] (./spp.aux)
+(Font)              <5> on input line 24.
+[2 <../img/miqp2.pdf>] (./spp.aux)
  ***********
 LaTeX2e <2023-06-01>
 L3 programming layer <2023-06-05>
@@ -281,17 +291,17 @@ Package rerunfilecheck Info: File `spp.out' has not changed.
 (rerunfilecheck)             Checksum: FD289543127746374EFD7C9FE00CB2CE;337.
  ) 
 Here is how much of TeX's memory you used:
- 8351 strings out of 477695
- 129015 string characters out of 5831649
+ 8357 strings out of 477695
+ 129119 string characters out of 5831649
  1855759 words of memory out of 5000000
- 28765 multiletter control sequences out of 15000+600000
+ 28768 multiletter control sequences out of 15000+600000
  514160 words of font info for 37 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,5n,79p,245b,501s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on spp.pdf (2 pages, 711259 bytes).
+Output written on spp.pdf (2 pages, 711799 bytes).
 PDF statistics:
  60 PDF objects out of 1000 (max. 8388607)
  44 compressed objects within 1 object stream

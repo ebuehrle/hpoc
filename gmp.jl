@@ -36,6 +36,6 @@ dbdt = differentiate(b, x) * f(x,u)
 @constraint m [i in [2,4]] sum(μ[eout(i),1]) == sum(μ[einc(i),3])
 
 optimize!(m)
-println(objective_value(m))
+write("img/gmp.txt","$(objective_value(m))")
 p = integrate.(1,μ[:,1])
-println(p)
+write("img/gmpp.txt","$(p)")
