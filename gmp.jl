@@ -6,16 +6,18 @@ A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
 f(x,u) = A*x + B*u
 c(x,u) = x'*x + u'*u
+x0 = [-1.0, -1.0, 0.0, 0.5]
+xT = [-0.0, -0.0, 0.0, 0.0]
 
 Symbolics.@variables x[1:4]
 l = G(!(HalfSpace(x[1] >= -0.7, x) & HalfSpace(x[1] <= -0.3, x) 
     & HalfSpace(x[2] >= -0.7, x) & HalfSpace(x[2] <= -0.3, x)))
 
 @polyvar x[1:4] u[1:2]
-μ0 = DiracMeasure([x;u], [-1.0, -1.0, 0.0, 0.5, 0.0, 0.0])
-μT = DiracMeasure([x;u], [-0.0, -0.0, 0.0, 0.0, 0.0, 0.0])
+μ0 = DiracMeasure([x;u], [x0; 0.0; 0.0])
+μT = DiracMeasure([x;u], [xT; 0.0; 0.0])
 
-hs, q0, qT = pwa(A, B, l, LTLTranslator())
+hs, q0, qT = pwa(A, B, l, x0, xT, LTLTranslator())
 Kf = [BasicSemialgebraicSet(FullSpace(), 
         - stack([h.a for h in HybridSystems.mode(hs,source(hs.automaton,ti)).X.constraints])'*x 
         + stack([h.b for h in HybridSystems.mode(hs,source(hs.automaton,ti)).X.constraints])) for ti in HybridSystems.transitions(hs)]
@@ -41,8 +43,8 @@ dbdt = differentiate(b, x) * f(x,u)
 @objective m Min sum(Mom.(c(x,u),μ[:,2]))
 @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
 @constraint m [i=1:nmodes(hs)] sum(μ[eout(i),1]) == sum(μ[einc(i),3])
-@constraint m sum(μ[eout(nmodes(hs)+1),3]) == μ0
-@constraint m sum(μ[einc(nmodes(hs)+2),1]) == μT
+@constraint m sum(μ[eout(nmodes(hs)+1),1]) == μ0
+@constraint m sum(μ[einc(nmodes(hs)+2),3]) == μT
 
 optimize!(m)
 write("img/gmp.txt","$(objective_value(m))")
