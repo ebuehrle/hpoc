@@ -30,7 +30,7 @@ function pwa(A, B, f::Formula, translator::LTLTranslator)
     V, E, K, q0, qT = ltla(translator, f)
     M = [@system(x' = A*x + B*u, x ∈ HPolytope(a,b), u ∈ Universe(size(B,2))) for (a,b) in K]
     Σ = [e1[2] == e2[1] for e1 in E, e2 in E]
-    sgl(m1,m2) = let v = vrep(polyhedron(HPolytope([m1;m2]))); !(npoints(v) >= 2 || nrays(v) >= 1) end
+    sgl(m1,m2) = let n = length(first(m1).a); let v = vrep(polyhedron(HPolyhedron([m1;m2]))); !(npoints(v) >= n || nrays(v) + nlines(v) >= n-1) end end
     adj(m1,m2) = !isempty(HPolytope(m1) ∩ HPolytope(m2)) && !sgl(m1, m2)
     Σ = [(i != j) && Σ[i,j] && adj(M[i].X.constraints, M[j].X.constraints) for i=1:size(Σ,1), j=1:size(Σ,2)]
 
