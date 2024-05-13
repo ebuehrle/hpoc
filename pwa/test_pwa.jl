@@ -1,7 +1,8 @@
 include("pwa.jl")
 
 @variables x[1:4]
-f = G(!(HalfSpace(x[1] >= -0.7, x) & HalfSpace(x[1] <= -0.3, x) & HalfSpace(x[2] >= -0.7, x) & HalfSpace(x[2] <= -0.3, x)))
+f = G(!(HalfSpace(x[1] >= -0.7, x) & HalfSpace(x[1] <= -0.3, x) 
+    & HalfSpace(x[2] >= -0.7, x) & HalfSpace(x[2] <= -0.3, x)))
 
 V, E, K, q0, qT = pwa(LTLTranslator(), f)
 
