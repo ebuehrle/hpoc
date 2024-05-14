@@ -30,17 +30,17 @@ K67 = @set K6 && K7
 K78 = @set K7 && K8
 
 E = [
-    1 2;
+    #1 2;
     2 1;
     
-    2 3;
+    #2 3;
     3 2;
     
-    3 4;
-    #4 3;
+    #3 4;
+    4 3;
     
     #4 5;
-    #5 4;
+    5 4;
     
     #5 6;
     6 5;
@@ -52,29 +52,29 @@ E = [
     8 7;
     
     #8 1;
-    #1 8;
+    1 8;
     
-    9 1;
+    #9 1;
     9 8;
     
-    4 10;
+    #4 10;
     5 10;
 ]
 eout(i) = E[:,1] .== i
 einc(i) = E[:,2] .== i
 
 K = [
-    [K12, K2, K23],
+    #[K12, K2, K23],
     [K23, K2, K12],
 
-    [K23, K3, K35],
+    #[K23, K3, K35],
     [K35, K3, K23],
 
-    [K35, K5, K58],
-    #[K58, K5, K35],
+    #[K35, K5, K58],
+    [K58, K5, K35],
 
     #[K58, K8, K78],
-    #[K78, K8, K58],
+    [K78, K8, K58],
 
     #[K78, K7, K67],
     [K67, K7, K78],
@@ -86,12 +86,12 @@ K = [
     [K14, K4, K46],
 
     #[K14, K1, K12],
-    #[K12, K1, K14],
+    [K12, K1, K14],
 
-    [K1, K1, K12],
+    #[K1, K1, K12],
     [K1, K1, K14],
 
-    [K58, K8, K8],
+    #[K58, K8, K8],
     [K78, K8, K8],
 ]
 
@@ -104,15 +104,21 @@ b = monomials(x, 0:approximation_degree(m))
 dbdt = differentiate(b, x) * f(x,u)
 
 @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][j])
-@objective m Min sum(Mom.(c(x,u), μ[:,2])) + 0.1*sum(Mom.(1, μ[:,1] + μ[:,3]))
+@objective m Min sum(Mom.(c(x,u), μ[:,2])) + 0.1*sum(Mom.(1, μ))
 @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
 @constraint m [i=1:_modes] sum(μ[eout(i),1]) == sum(μ[einc(i),3])
-@constraint m sum(μ[eout(nmodes(hs)+1),1]) == μ0
-@constraint m sum(μ[einc(nmodes(hs)+2),3]) == μT
+@constraint m sum(μ[eout(_modes+1),1]) == μ0
+@constraint m sum(μ[einc(_modes+2),3]) == μT
+@constraint m Mom.(1, μ[:,1]) .<= 1
+@constraint m Mom.(1, μ[:,3]) .<= 1
 
 optimize!(m)
 println(sum(integrate.(c(x,u), μ[:,2])))
 p = integrate.(1,μ[:,1])
 t = integrate.(1,μ[:,2])
 o = integrate.(1,μ[:,3])
-println(collect(zip(Tuple.(eachrow(E)),p,t,o)))
+J = integrate.(c(x,u),μ[:,2])
+r = collect(zip(Tuple.(eachrow(E)),p,t,o,J))
+[println(l) for l in r]
+#println(p)
+#println(J)
