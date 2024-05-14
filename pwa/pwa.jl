@@ -2,21 +2,25 @@ using Spot
 using LazySets
 import Polyhedra: vrep, polyhedron, npoints, nrays, nlines
 using HybridSystems, MathematicalSystems
+using LinearAlgebra
 include("formula.jl")
 
 function ltla(translator::LTLTranslator, f::Formula)
+    println("translating to automaton")
     l, d = translate(translator, f)
     l = split_edges(l)
 
     V = collect(1:num_states(l))
     E = get_edges(l)
 
+    println("removing redundant constraints")
     K = [(Set(label_to_array(s)), setdiff(Set(atomic_propositions(l)), Set(label_to_array(s)))) for s in get_labels(l)]
     K = [([d[string(l)] for l in p], [d[string(l)] for l in n]) for (p,n) in K]
     K = [(p, [HalfSpace(-h.a, -h.b) for h in n]) for (p,n) in K]
     K = [[Vector{HalfSpace{Float64, Vector{Float64}}}(p);Vector{HalfSpace{Float64, Vector{Float64}}}(n)] for (p,n) in K]
     K = [remove_redundant_constraints(HPolyhedron(k)) for k in K]
     
+    println("removing empty modes")
     zerovol(p) = let n = length(first(p.constraints).a); let v = vrep(polyhedron(p ∩ Hyperrectangle(zeros(n),1000*ones(n)))); rank(v.V .- v.V[1,:]') <= n-1 end end
     e = [!isempty(k) && !zerovol(k) for k in K]
     K = K[e]
@@ -33,6 +37,7 @@ end
 
 function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
     V, E, K, q0, qT = ltla(translator, f)
+    println("computing pwa")
     M = [@system(x' = A*x + B*u, x ∈ HPolytope(a,b), u ∈ Universe(size(B,2))) for (a,b) in K]
     Σ = [e1[2] == e2[1] for e1 in E, e2 in E]
     sgl(m1,m2) = let n = length(first(m1).a); let v = vrep(polyhedron(HPolyhedron([m1;m2]) ∩ Hyperrectangle(zeros(n),1000*ones(n)))); rank(v.V .- v.V[1,:]') <= n-2 end end
@@ -53,7 +58,8 @@ end
 
 function fpwa(A, B, l::Formula, x0, xT, translator::LTLTranslator)
     hs, hq0, hqT = pwa(A, B, l, x0, xT, translator)
-
+    
+    println("computing fpwa")
     VV = [(source(hs,t),target(hs,t)) for t in HybridSystems.transitions(hs)]
     V = Tuple.(Set([Set(m) for m in VV]))
     M = [remove_redundant_constraints(HPolyhedron([
