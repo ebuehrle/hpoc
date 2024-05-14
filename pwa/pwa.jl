@@ -50,17 +50,20 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
 end
 
 function fpwa(A, B, l::Formula, x0, xT, translator::LTLTranslator)
-    hs, q0, qT = pwa(A, B, l, x0, xT, translator)
+    hs, hq0, hqT = pwa(A, B, l, x0, xT, translator)
 
+    VV = [(source(hs,t),target(hs,t)) for t in HybridSystems.transitions(hs)]
+    V = Tuple.(Set([Set(m) for m in VV]))
     M = [remove_redundant_constraints(HPolyhedron([
-        HybridSystems.mode(hs,source(hs,r)).X.constraints; 
-        HybridSystems.mode(hs,target(hs,r)).X.constraints])) for r in HybridSystems.transitions(hs)]
-    E = [(i1,i2) for (i1,r1) in enumerate(HybridSystems.transitions(hs)) for (i2,r2) in enumerate(HybridSystems.transitions(hs)) if target(hs,r1) == source(hs,r2) && source(hs,r1) != target(hs,r2)]
-    K = [HybridSystems.mode(hs,target(hs,r1)).X for (i1,r1) in enumerate(HybridSystems.transitions(hs)) for (i2,r2) in enumerate(HybridSystems.transitions(hs)) if (i1,i2) in E]
-    q0 = [i for (i,e) in enumerate(HybridSystems.transitions(hs)) if source(hs,e) in q0]
-    K0 = [HybridSystems.mode(hs,source(hs,t)).X for (i,t) in enumerate(HybridSystems.transitions(hs)) if i in q0]
-    qT = [i for (i,e) in enumerate(HybridSystems.transitions(hs)) if target(hs,e) in qT]
-    KT = [HybridSystems.mode(hs,target(hs,t)).X for (i,t) in enumerate(HybridSystems.transitions(hs)) if i in qT]
+        HybridSystems.mode(hs,i).X.constraints; 
+        HybridSystems.mode(hs,j).X.constraints])) for (i,j) in V]
+    Ex = [((i1,Set(v1)),(i2,Set(v2))) for (i1,v1) in enumerate(V) for (i2,v2) in enumerate(V) if (i1 != i2) && !isempty(Set(v1) ∩ Set(v2))]
+    E = [(i1,i2) for ((i1,_),(i2,_)) in Ex]
+    K = [HybridSystems.mode(hs, first(v1 ∩ v2)).X for ((_,v1),(_,v2)) in Ex]
+    q0 = [i for (i,v) in enumerate(V) if !isempty(Set(hq0) ∩ Set(v))]
+    K0 = [HybridSystems.mode(hs,s).X for (s,t) in VV if s in hq0]
+    qT = [i for (i,v) in enumerate(V) if !isempty(Set(hqT) ∩ Set(v))]
+    KT = [HybridSystems.mode(hs,t).X for (s,t) in VV if t in hqT]
 
     automaton = GraphAutomaton(length(M))
     [add_transition!(automaton, i, j, k) for (k,(i,j)) in enumerate(E)]
