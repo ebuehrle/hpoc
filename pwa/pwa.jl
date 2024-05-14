@@ -14,10 +14,11 @@ function ltla(translator::LTLTranslator, f::Formula)
     K = [(Set(label_to_array(s)), setdiff(Set(atomic_propositions(l)), Set(label_to_array(s)))) for s in get_labels(l)]
     K = [([d[string(l)] for l in p], [d[string(l)] for l in n]) for (p,n) in K]
     K = [(p, [HalfSpace(-h.a, -h.b) for h in n]) for (p,n) in K]
-    K = [[p;n] for (p,n) in K]
+    K = [[Vector{HalfSpace{Float64, Vector{Float64}}}(p);Vector{HalfSpace{Float64, Vector{Float64}}}(n)] for (p,n) in K]
     K = [remove_redundant_constraints(HPolyhedron(k)) for k in K]
     
-    e = [!isempty(k) for k in K]
+    zerovol(p) = let n = length(first(p.constraints).a); let v = vrep(polyhedron(p ∩ Hyperrectangle(zeros(n),1000*ones(n)))); rank(v.V .- v.V[1,:]') <= n-1 end end
+    e = [!isempty(k) && !zerovol(k) for k in K]
     K = K[e]
     E = E[e]
 
@@ -34,7 +35,7 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
     V, E, K, q0, qT = ltla(translator, f)
     M = [@system(x' = A*x + B*u, x ∈ HPolytope(a,b), u ∈ Universe(size(B,2))) for (a,b) in K]
     Σ = [e1[2] == e2[1] for e1 in E, e2 in E]
-    sgl(m1,m2) = let n = length(first(m1).a); let v = vrep(polyhedron(HPolyhedron([m1;m2]))); !(npoints(v) >= n || nrays(v) + nlines(v) >= n-1) end end
+    sgl(m1,m2) = let n = length(first(m1).a); let v = vrep(polyhedron(HPolyhedron([m1;m2]) ∩ Hyperrectangle(zeros(n),1000*ones(n)))); rank(v.V .- v.V[1,:]') <= n-2 end end
     adj(m1,m2) = !isempty(HPolytope(m1) ∩ HPolytope(m2)) && !sgl(m1, m2)
     Σ = [(i != j) && Σ[i,j] && adj(M[i].X.constraints, M[j].X.constraints) for i=1:size(Σ,1), j=1:size(Σ,2)]
 
