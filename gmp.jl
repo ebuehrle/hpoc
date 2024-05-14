@@ -47,11 +47,13 @@ b = monomials(x, 0:approximation_degree(m))
 dbdt = differentiate(b, x) * f(x,u)
 
 @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][j])
-@objective m Min sum(Mom.(c(x,u),μ[:,2]))
+@objective m Min sum(Mom.(c(x,u),μ[:,2])) + 0.01*sum(Mom.(1, μ))
 @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
 @constraint m [i=1:nmodes(hs)] sum(μ[eout(i),1]) == sum(μ[einc(i),3])
 @constraint m sum(μ[eout(nmodes(hs)+1),1]) == μ0
 @constraint m sum(μ[einc(nmodes(hs)+2),3]) == μT
+@constraint m Mom.(1, μ[:,1]) .<= 1
+@constraint m Mom.(1, μ[:,3]) .<= 1
 
 optimize!(m)
 write("img/gmp.txt","$(objective_value(m))")

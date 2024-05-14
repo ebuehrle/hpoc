@@ -1,5 +1,6 @@
 using Spot
-using LazySets, Polyhedra
+using LazySets
+import Polyhedra: vrep, polyhedron, npoints, nrays, nlines
 using HybridSystems, MathematicalSystems
 include("formula.jl")
 
