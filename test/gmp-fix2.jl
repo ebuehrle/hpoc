@@ -30,68 +30,68 @@ K67 = @set K6 && K7
 K78 = @set K7 && K8
 
 E = [
-    #1 2;
+    1 2;
     2 1;
     
-    #2 3;
+    2 3;
     3 2;
     
-    #3 4;
+    3 4;
     4 3;
     
-    #4 5;
+    4 5;
     5 4;
     
-    #5 6;
+    5 6;
     6 5;
     
-    #6 7;
+    6 7;
     7 6;
     
-    #7 8;
+    7 8;
     8 7;
     
-    #8 1;
+    8 1;
     1 8;
     
-    #9 1;
+    9 1;
     9 8;
     
-    #4 10;
+    4 10;
     5 10;
 ]
 eout(i) = E[:,1] .== i
 einc(i) = E[:,2] .== i
 
 K = [
-    #[K12, K2, K23],
+    [K12, K2, K23],
     [K23, K2, K12],
 
-    #[K23, K3, K35],
+    [K23, K3, K35],
     [K35, K3, K23],
 
-    #[K35, K5, K58],
+    [K35, K5, K58],
     [K58, K5, K35],
 
-    #[K58, K8, K78],
+    [K58, K8, K78],
     [K78, K8, K58],
 
-    #[K78, K7, K67],
+    [K78, K7, K67],
     [K67, K7, K78],
 
-    #[K67, K6, K46],
+    [K67, K6, K46],
     [K46, K6, K67],
 
-    #[K46, K4, K14],
+    [K46, K4, K14],
     [K14, K4, K46],
 
-    #[K14, K1, K12],
+    [K14, K1, K12],
     [K12, K1, K14],
 
-    #[K1, K1, K12],
+    [K1, K1, K12],
     [K1, K1, K14],
 
-    #[K58, K8, K8],
+    [K58, K8, K8],
     [K78, K8, K8],
 ]
 
@@ -104,7 +104,7 @@ b = monomials(x, 0:approximation_degree(m))
 dbdt = differentiate(b, x) * f(x,u)
 
 @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][j])
-@objective m Min sum(Mom.(c(x,u), μ[:,2])) + 0.1*sum(Mom.(1, μ))
+@objective m Min sum(Mom.(c(x,u), μ[:,2])) + 0.01*sum(Mom.(1, μ))
 @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
 @constraint m [i=1:_modes] sum(μ[eout(i),1]) == sum(μ[einc(i),3])
 @constraint m sum(μ[eout(_modes+1),1]) == μ0
