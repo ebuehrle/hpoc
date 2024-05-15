@@ -33,13 +33,13 @@ Ks = [(set(K, x),
         set(HybridSystems.mode(hs,q).X, x)) for (q,K) in zip(q0,K0)]
 K = [Kf; Kt; Ks]
 
-Ef = stack([source(hs, t), target(hs, t)] for t in HybridSystems.transitions(hs))'
-Et = stack([q, nmodes(hs)+2] for q in qT)'
-Es = stack([nmodes(hs)+1, q] for q in q0)'
+Ef = [(source(hs, t), target(hs, t)) for t in HybridSystems.transitions(hs)]
+Et = [(q, nmodes(hs)+2) for q in qT]
+Es = [(nmodes(hs)+1, q) for q in q0]
 E = [Ef; Et; Es]
 
-eout(i) = E[:,1] .== i
-einc(i) = E[:,2] .== i
+eout(i) = [k == i for (k,_) in E]
+einc(i) = [k == i for (_,k) in E]
 
 m = GMPModel(Clarabel.Optimizer)
 set_approximation_mode(m, PRIMAL_RELAXATION_MODE())

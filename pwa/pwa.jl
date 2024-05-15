@@ -5,17 +5,37 @@ using HybridSystems, MathematicalSystems
 using LinearAlgebra
 include("formula.jl")
 
+function split_edge_disjunctions(E, L)
+    split_disjunctions(x) = strip.(split(x, "|"))
+    remove_braces(x) = (x[1] == '(') ? x[2:end-1] : x
+    split_conjunctions(x) = strip.(split(x, "&"))
+    remove_negation(x) = x[2:end]
+    group_by_signs(x) = (filter(l->!startswith(l,'!'),x), remove_negation.(filter(l->startswith(l,'!'),x)))
+
+    split_label(x) = group_by_signs.(split_conjunctions.(remove_braces.(split_disjunctions(x))))
+    S = split_label.(L)
+
+    T = [[e for _ in 1:length(s)] for (e,s) in zip(E,S)]
+    T = vcat(T...)
+    S = vcat(S...)
+
+    return T, S
+end
+
 function ltla(translator::LTLTranslator, f::Formula)
-    println("translating to automaton")
+    println("constructing automaton")
     l, d = translate(translator, f)
-    l = split_edges(l)
+    # l = split_edges(l)
 
     V = collect(1:num_states(l))
     E = get_edges(l)
+    L = string.(get_labels(l))
+
+    E, L = split_edge_disjunctions(E, L)
 
     println("removing redundant constraints")
-    K = [(Set(label_to_array(s)), setdiff(Set(atomic_propositions(l)), Set(label_to_array(s)))) for s in get_labels(l)]
-    K = [([d[string(l)] for l in p], [d[string(l)] for l in n]) for (p,n) in K]
+    K = [(Set(p), Set(n)) for (p,n) in L]
+    K = [([d[l] for l in p], [d[l] for l in n]) for (p,n) in K]
     K = [(p, [HalfSpace(-h.a, -h.b) for h in n]) for (p,n) in K]
     K = [[Vector{HalfSpace{Float64, Vector{Float64}}}(p);Vector{HalfSpace{Float64, Vector{Float64}}}(n)] for (p,n) in K]
     K = [remove_redundant_constraints(HPolyhedron(k)) for k in K]
@@ -68,10 +88,12 @@ function fpwa(A, B, l::Formula, x0, xT, translator::LTLTranslator)
     Ex = [((i1,Set(v1)),(i2,Set(v2))) for (i1,v1) in enumerate(V) for (i2,v2) in enumerate(V) if (i1 != i2) && !isempty(Set(v1) ∩ Set(v2))]
     E = [(i1,i2) for ((i1,_),(i2,_)) in Ex]
     K = [HybridSystems.mode(hs, first(v1 ∩ v2)).X for ((_,v1),(_,v2)) in Ex]
-    q0 = [i for (i,v) in enumerate(V) if !isempty(Set(hq0) ∩ Set(v))]
-    K0 = [HybridSystems.mode(hs,s).X for (s,t) in VV if s in hq0]
-    qT = [i for (i,v) in enumerate(V) if !isempty(Set(hqT) ∩ Set(v))]
-    KT = [HybridSystems.mode(hs,t).X for (s,t) in VV if t in hqT]
+    qm0 = [(i,first(Set(hq0) ∩ Set(v))) for (i,v) in enumerate(V) if !isempty(Set(hq0) ∩ Set(v)) && x0 in HybridSystems.mode(hs,first(Set(hq0) ∩ Set(v))).X]
+    q0 = [i for (i,_) in qm0]
+    K0 = [HybridSystems.mode(hs,k).X for (_,k) in qm0]
+    qmT = [(i,first(Set(hqT) ∩ Set(v))) for (i,v) in enumerate(V) if !isempty(Set(hqT) ∩ Set(v)) && xT in HybridSystems.mode(hs,first(Set(hqT) ∩ Set(v))).X]
+    qT = [i for (i,_) in qmT]
+    KT = [HybridSystems.mode(hs,k).X for (_,k) in qmT]
 
     automaton = GraphAutomaton(length(M))
     [add_transition!(automaton, i, j, k) for (k,(i,j)) in enumerate(E)]
