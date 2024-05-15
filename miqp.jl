@@ -2,7 +2,7 @@ using JuMP, Gurobi
 using Symbolics, LazySets, SemialgebraicSets
 using Graphs, LinearAlgebra
 using Plots
-include("pwa/pwa.jl")
+include("pwa/product.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
