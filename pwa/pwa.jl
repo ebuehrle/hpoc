@@ -32,23 +32,25 @@ function ltla(translator::LTLTranslator, f::Formula)
 
     E, L = split_edge_disjunctions(E, L)
 
-    println("removing redundant constraints")
     K = [(Set(p), Set(n)) for (p,n) in L]
     K = [([d[l] for l in p], [d[l] for l in n]) for (p,n) in K]
     K = [(p, [HalfSpace(-h.a, -h.b) for h in n]) for (p,n) in K]
     K = [[Vector{HalfSpace{Float64, Vector{Float64}}}(p);Vector{HalfSpace{Float64, Vector{Float64}}}(n)] for (p,n) in K]
-    K = [remove_redundant_constraints(HPolyhedron(k)) for k in K]
+    K = [HPolyhedron(k) for k in K]
     
     println("removing empty modes")
     zerovol(p) = let n = length(first(p.constraints).a); let v = vrep(polyhedron(p ∩ Hyperrectangle(zeros(n),1000*ones(n)))); rank(v.V .- v.V[1,:]') <= n-1 end end
     e = [!isempty(k) && !zerovol(k) for k in K]
-    K = K[e]
     E = E[e]
-
+    K = K[e]
+    
     println("removing redundant modes")
     r = [!any((e == xe) && issubset(k,xk) for (xk,xe) in zip(K[1:i-1],E[1:i-1])) for (i,(k,e)) in enumerate(zip(K,E))]
     K = K[r]
     E = E[r]
+    
+    println("removing redundant constraints")
+    K = [remove_redundant_constraints(k) for k in K]
 
     K = [k.constraints for k in K]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
