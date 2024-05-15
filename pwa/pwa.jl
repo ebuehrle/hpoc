@@ -25,7 +25,6 @@ end
 function ltla(translator::LTLTranslator, f::Formula)
     println("constructing automaton")
     l, d = translate(translator, f)
-    # l = split_edges(l)
 
     V = collect(1:num_states(l))
     E = get_edges(l)
@@ -45,6 +44,11 @@ function ltla(translator::LTLTranslator, f::Formula)
     e = [!isempty(k) && !zerovol(k) for k in K]
     K = K[e]
     E = E[e]
+
+    println("removing redundant modes")
+    r = [!any((e == xe) && issubset(k,xk) for (xk,xe) in zip(K[1:i-1],E[1:i-1])) for (i,(k,e)) in enumerate(zip(K,E))]
+    K = K[r]
+    E = E[r]
 
     K = [k.constraints for k in K]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
