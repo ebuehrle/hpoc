@@ -3,7 +3,6 @@ using LinearAlgebra
 import Polyhedra
 using HybridSystems, MathematicalSystems
 include("formula.jl")
-include("merge.jl")
 
 amb_dim(p) = let n = length(first(p.constraints).a);
     let v = tovrep(intersection(p, Hyperrectangle(zeros(n),1000*ones(n))));
