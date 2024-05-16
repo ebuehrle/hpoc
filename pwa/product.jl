@@ -3,6 +3,7 @@ using LinearAlgebra
 import Polyhedra
 using HybridSystems, MathematicalSystems
 include("formula.jl")
+include("merge.jl")
 
 amb_dim(p) = let n = length(first(p.constraints).a);
     let v = tovrep(intersection(p, Hyperrectangle(zeros(n),1000*ones(n))));
@@ -77,15 +78,12 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
     O = [O1[i1] for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
     Ix = [(i1,i2) for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
     E = [(i1,i2) for (i1,((i11,i12),v1)) in enumerate(zip(Ix,V)) for (i2,((i21,i22),v2)) in enumerate(zip(Ix,V)) if (i11,i21) ∈ E1 && (i12,i22) ∈ E2]
+
     E = filter(((i1,i2),) -> any(
         all(Set.(l) .⊆ Set.(O1[Ix[i2][1]])) && 
         e == (Ix[i1][2],Ix[i2][2]) for (e,l) in zip(E2,L2)), E)
     q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q10 && q2 in q20]
     qT = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q1T && q2 in q2T]
-
-    # remove unreachable
-    # remove dead
-    # merge
 
     println("removing empty modes")
     e = [!isempty(k) && !zerovolume(k) for (k,_) in V]
@@ -101,14 +99,39 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
     Ix = Ix[r]
     E = [(i,j) for (i,j) in E if r[i] && r[j]]
 
+    println("merging equivalent modes")
+    for _ in 1:length(V)-1
+        groups = [[i] for i in 1:length(V)]
+        
+        function can_merge_modes(i,j)
+            if (i,j) ∉ E return end
+            if (j,i) ∉ E return end
+            p1,i1 = V[i]
+            p2,i2 = V[j]
+            if i1 != i2 return end
+            p = can_merge_polyhedra(p1, p2)
+            if !isnothing(p) return (p,i1) end
+        end
+        groups, Vm = _merge_equivalents(groups, V, can_merge_modes)
+        if length(Vm) == length(V) break end
+            
+        update_mode(i) = first(findall(x -> (i in x), groups))
+        Em = collect(Set([update_mode.(e) for e in E]))
+        Em = filter(((i,j),) -> (i != j), Em)
+        V = Vm
+        E = Em
+    end
+
+    # remove unreachable or dead
+
     println("removing redundant constraints")
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
 
-    q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q10 && q2 in q20]
-    qT = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q1T && q2 in q2T]
+    q0 = [i for (i,(v,k)) in enumerate(V) if x0 in v && k in q20]
+    qT = [i for (i,(v,k)) in enumerate(V) if xT in v && k in q2T]
 
     println("constructing pwa")
     modes = [@system(x' = A*x + B*u, x ∈ HPolytope(a,b), u ∈ Universe(size(B,2))) for (a,b) in K]
