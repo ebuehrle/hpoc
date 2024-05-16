@@ -22,7 +22,7 @@ w3 = HalfSpace(-0.3 <= x[1], x) & HalfSpace(x[1] <= -0.2, x) & HalfSpace(0.3 <= 
 room = HalfSpace(-0.6 <= x[1], x) & HalfSpace(x[1] <= -0.0, x) & HalfSpace(0.0 <= x[2], x) & HalfSpace(x[2] <= 0.5, x)
 lf = G(room) & U(!d1,k1)# & U(!d2,k2) & G(!w1) & G(!w2) & G(!w3)
 
-hs, q0, qT = pwa(A, B, lf, x0, xT, LTLTranslator())
+hs, q0, qT = ppwa(A, B, lf, x0, xT, LTLTranslator())
 println(HybridSystems.nmodes(hs), " modes")
 println(HybridSystems.ntransitions(hs), " transitions")
 println("initial states ", q0)

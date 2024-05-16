@@ -16,7 +16,7 @@ lane1 = HalfSpace(x[2] >= -3.0, x) & HalfSpace(x[2] <= -1.0, x) & HalfSpace(x[1]
 lane2 = HalfSpace(x[2] >= -1.0, x) & HalfSpace(x[2] <=  1.0, x)
 lf = G(lane1 | lane2)
 
-hs, q0, qT = pwa(A, B, lf, x0, xT, LTLTranslator())
+hs, q0, qT = ppwa(A, B, lf, x0, xT, LTLTranslator())
 println(HybridSystems.nmodes(hs), " modes")
 println(HybridSystems.ntransitions(hs), " transitions")
 println("initial states ", q0)

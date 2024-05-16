@@ -15,7 +15,7 @@ Symbolics.@variables x[1:4]
 l = G(!(HalfSpace(x[1] >= -0.7, x) & HalfSpace(x[1] <= -0.3, x) 
     & HalfSpace(x[2] >= -0.7, x) & HalfSpace(x[2] <= -0.3, x)))
 
-hs, q0, qT = pwa(A, B, l, x0, xT, LTLTranslator())
+hs, q0, qT = ppwa(A, B, l, x0, xT, LTLTranslator())
 println(HybridSystems.nmodes(hs), " modes")
 println(HybridSystems.ntransitions(hs), " transitions")
 println("initial states ", q0)

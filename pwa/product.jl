@@ -57,7 +57,7 @@ function split_edge_disjunctions(E, L)
     return T, S
 end
 
-function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
+function ppwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
     l, d = translate(translator, f)
 
     Vp = partition(d)
@@ -85,63 +85,6 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
     q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q10 && q2 in q20]
     qT = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q1T && q2 in q2T]
 
-    println("removing empty modes")
-    e = [!isempty(k) && !zerovolume(k) for (k,_) in V]
-    Vx = collect(1:length(V))[e]
-    V = V[e]
-    O = O[e]
-    Ix = Ix[e]
-    E = [(findfirst(x -> x == i, Vx), findfirst(x -> x == j, Vx)) for (i,j) in E if e[i] && e[j]]
-    
-    println("removing redundant modes")
-    r = [!any((i == ik) && issubset(k,xk) for (xk,ik) in V[1:j-1]) for (j,(k,i)) in enumerate(V)]
-    Vx = collect(1:length(V))[r]
-    V = V[r]
-    O = O[r]
-    Ix = Ix[r]
-    E = [(findfirst(x -> x == i, Vx), findfirst(x -> x == j, Vx)) for (i,j) in E if r[i] && r[j]]
-
-    println("merging equivalent modes")
-    for _ in 1:length(V)-1
-        groups = [[i] for i in 1:length(V)]
-        
-        function can_merge_modes(i,j)
-            if (i,j) ∉ E return end
-            if (j,i) ∉ E return end
-            p1,i1 = V[i]
-            p2,i2 = V[j]
-            if i1 != i2 return end
-            p = can_merge_polyhedra(p1, p2)
-            if !isnothing(p) return (p,i1) end
-        end
-        groups, Vm = _merge_equivalents(groups, V, can_merge_modes)
-        if length(Vm) == length(V) break end
-            
-        update_mode(i) = first(findall(x -> (i in x), groups))
-        Em = collect(Set([update_mode.(e) for e in E]))
-        Em = filter(((i,j),) -> (i != j), Em)
-        V = Vm
-        E = Em
-    end
-
-    q0 = [i for (i,(v,k)) in enumerate(V) if x0 in v && k in q20]
-    qT = [i for (i,(v,k)) in enumerate(V) if xT in v && k in q2T]
-
-    println("remove unreachable or dead modes")
-    T = [(i,j) in E for i in 1:length(V), j in 1:length(V)]
-    T = sum(T^i for i in 0:length(V))
-    reachable = dropdims(any(T[q0,:] .>= 1, dims=1), dims=1)
-    alive = dropdims(any(T[:,qT] .>= 1, dims=2), dims=2)
-    keep = reachable .&& alive
-    println("pruning $(sum(1 .- keep)) modes ($(sum(1 .- reachable)) unreachable, $(sum(1 .- alive)) dead)")
-
-    # Vx = collect(1:length(V))[keep]
-    # V = V[keep]
-    # E = [(findfirst(x -> x == i, Vx), findfirst(x -> x == j, Vx)) for (i,j) in E if keep[i] && keep[j]]
-    # q0 = [findfirst(x -> x == q, Vx) for q in q0 if keep[q]]
-    # qT = [findfirst(x -> x == q, Vx) for q in qT if keep[q]]
-
-    println("removing redundant constraints")
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
     K = [k.constraints for (k,_) in V]
@@ -157,4 +100,33 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
 
     return h, q0, qT
 
+end
+
+function fpwa(A, B, l::Formula, x0, xT, translator::LTLTranslator)
+    hs, hq0, hqT = ppwa(A, B, l, x0, xT, translator)
+    
+    println("computing fpwa")
+    VV = [(source(hs,t),target(hs,t)) for t in HybridSystems.transitions(hs)]
+    V = Tuple.(Set([Set(m) for m in VV]))
+    M = [remove_redundant_constraints(HPolyhedron([
+        HybridSystems.mode(hs,i).X.constraints; 
+        HybridSystems.mode(hs,j).X.constraints])) for (i,j) in V]
+    Ex = [((i1,Set(v1)),(i2,Set(v2))) for (i1,v1) in enumerate(V) for (i2,v2) in enumerate(V) if (i1 != i2) && !isempty(Set(v1) ∩ Set(v2))]
+    E = [(i1,i2) for ((i1,_),(i2,_)) in Ex]
+    K = [HybridSystems.mode(hs, first(v1 ∩ v2)).X for ((_,v1),(_,v2)) in Ex]
+    qm0 = [(i,first(Set(hq0) ∩ Set(v))) for (i,v) in enumerate(V) if !isempty(Set(hq0) ∩ Set(v)) && x0 in HybridSystems.mode(hs,first(Set(hq0) ∩ Set(v))).X]
+    q0 = [i for (i,_) in qm0]
+    K0 = [HybridSystems.mode(hs,k).X for (_,k) in qm0]
+    qmT = [(i,first(Set(hqT) ∩ Set(v))) for (i,v) in enumerate(V) if !isempty(Set(hqT) ∩ Set(v)) && xT in HybridSystems.mode(hs,first(Set(hqT) ∩ Set(v))).X]
+    qT = [i for (i,_) in qmT]
+    KT = [HybridSystems.mode(hs,k).X for (_,k) in qmT]
+
+    automaton = GraphAutomaton(length(M))
+    [add_transition!(automaton, i, j, k) for (k,(i,j)) in enumerate(E)]
+    modes = [@system(x' = 0, x ∈ m) for m in M]
+    transitions = [@system(x' = A*x + B*u, x ∈ k, u ∈ Universe(size(B,2))) for k in K]
+    switchings = [AutonomousSwitching() for _ in transitions]
+    h = HybridSystem(automaton, modes, transitions, switchings)
+
+    return h, q0, qT, K0, KT
 end
