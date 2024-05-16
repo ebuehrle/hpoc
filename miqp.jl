@@ -6,20 +6,21 @@ include("pwa/product.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
-h = 0.1
-T = 50
+l = let x = Symbolics.variables(:x, 1:4)
+    G(!(HalfSpace(x[1] >= -0.7, x) & HalfSpace(x[1] <= -0.3, x) 
+    & HalfSpace(x[2] >= -0.7, x) & HalfSpace(x[2] <= -0.3, x)))
+end
+
 x0 = [-1.0, -1.0, 0.0, 0.5]
 xT = [-0.0, -0.0, 0.0, 0.0]
-
-Symbolics.@variables x[1:4]
-l = G(!(HalfSpace(x[1] >= -0.7, x) & HalfSpace(x[1] <= -0.3, x) 
-    & HalfSpace(x[2] >= -0.7, x) & HalfSpace(x[2] <= -0.3, x)))
-
 hs, q0, qT = ppwa(A, B, l, x0, xT, LTLTranslator())
 println(HybridSystems.nmodes(hs), " modes")
 println(HybridSystems.ntransitions(hs), " transitions")
 println("initial states ", q0)
 println("terminal states ", qT)
+
+h = 0.1
+T = 50
 K = [(stack([h.a for h in HybridSystems.mode(hs,i).X.constraints])', 
       stack([h.b for h in HybridSystems.mode(hs,i).X.constraints])) for i in 1:nmodes(hs)]
 E = adjacency_matrix(hs.automaton.G) + I
