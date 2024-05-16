@@ -87,17 +87,19 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
 
     println("removing empty modes")
     e = [!isempty(k) && !zerovolume(k) for (k,_) in V]
+    Vx = collect(1:length(V))[e]
     V = V[e]
     O = O[e]
     Ix = Ix[e]
-    E = [(i,j) for (i,j) in E if e[i] && e[j]]
-
+    E = [(findfirst(x -> x == i, Vx), findfirst(x -> x == j, Vx)) for (i,j) in E if e[i] && e[j]]
+    
     println("removing redundant modes")
     r = [!any((i == ik) && issubset(k,xk) for (xk,ik) in V[1:j-1]) for (j,(k,i)) in enumerate(V)]
+    Vx = collect(1:length(V))[r]
     V = V[r]
     O = O[r]
     Ix = Ix[r]
-    E = [(i,j) for (i,j) in E if r[i] && r[j]]
+    E = [(findfirst(x -> x == i, Vx), findfirst(x -> x == j, Vx)) for (i,j) in E if r[i] && r[j]]
 
     println("merging equivalent modes")
     for _ in 1:length(V)-1
@@ -122,16 +124,28 @@ function pwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
         E = Em
     end
 
-    # remove unreachable or dead
+    q0 = [i for (i,(v,k)) in enumerate(V) if x0 in v && k in q20]
+    qT = [i for (i,(v,k)) in enumerate(V) if xT in v && k in q2T]
+
+    println("remove unreachable or dead modes")
+    T = [(i,j) in E for i in 1:length(V), j in 1:length(V)]
+    T = sum(T^i for i in 0:length(V))
+    reachable = dropdims(any(T[q0,:] .>= 1, dims=1), dims=1)
+    alive = dropdims(any(T[:,qT] .>= 1, dims=2), dims=2)
+    keep = reachable .&& alive
+    println("pruning $(sum(1 .- keep)) modes ($(sum(1 .- reachable)) unreachable, $(sum(1 .- alive)) dead)")
+
+    # Vx = collect(1:length(V))[keep]
+    # V = V[keep]
+    # E = [(findfirst(x -> x == i, Vx), findfirst(x -> x == j, Vx)) for (i,j) in E if keep[i] && keep[j]]
+    # q0 = [findfirst(x -> x == q, Vx) for q in q0 if keep[q]]
+    # qT = [findfirst(x -> x == q, Vx) for q in qT if keep[q]]
 
     println("removing redundant constraints")
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
-
-    q0 = [i for (i,(v,k)) in enumerate(V) if x0 in v && k in q20]
-    qT = [i for (i,(v,k)) in enumerate(V) if xT in v && k in q2T]
 
     println("constructing pwa")
     modes = [@system(x' = A*x + B*u, x ∈ HPolytope(a,b), u ∈ Universe(size(B,2))) for (a,b) in K]

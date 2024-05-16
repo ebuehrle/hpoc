@@ -2,7 +2,7 @@ using JuMP, Gurobi
 using Symbolics, LazySets, SemialgebraicSets
 using Graphs, LinearAlgebra
 using Plots
-include("pwa/pwa.jl")
+include("pwa/product.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
@@ -17,6 +17,10 @@ lane2 = HalfSpace(x[2] >= -1.0, x) & HalfSpace(x[2] <=  1.0, x)
 lf = G(lane1 | lane2)
 
 hs, q0, qT = pwa(A, B, lf, x0, xT, LTLTranslator())
+println(HybridSystems.nmodes(hs), " modes")
+println(HybridSystems.ntransitions(hs), " transitions")
+println("initial states ", q0)
+println("terminal states ", qT)
 K = [(stack([h.a for h in HybridSystems.mode(hs,i).X.constraints])', 
       stack([h.b for h in HybridSystems.mode(hs,i).X.constraints])) for i in 1:nmodes(hs)]
 E = adjacency_matrix(hs.automaton.G) + I

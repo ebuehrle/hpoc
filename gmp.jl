@@ -1,6 +1,6 @@
 using MomentOpt, DynamicPolynomials, Clarabel
 using Symbolics, LazySets, SemialgebraicSets
-include("pwa/pwa.jl")
+include("pwa/product.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]

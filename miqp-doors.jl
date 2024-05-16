@@ -2,7 +2,7 @@ using JuMP, Gurobi
 using Symbolics, LazySets, SemialgebraicSets
 using Graphs, LinearAlgebra
 using Plots
-include("pwa/pwa.jl")
+include("pwa/product.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
@@ -23,6 +23,10 @@ room = HalfSpace(-0.6 <= x[1], x) & HalfSpace(x[1] <= -0.0, x) & HalfSpace(0.0 <
 lf = G(room) & U(!d1,k1)# & U(!d2,k2) & G(!w1) & G(!w2) & G(!w3)
 
 hs, q0, qT = pwa(A, B, lf, x0, xT, LTLTranslator())
+println(HybridSystems.nmodes(hs), " modes")
+println(HybridSystems.ntransitions(hs), " transitions")
+println("initial states ", q0)
+println("terminal states ", qT)
 K = [(stack([h.a for h in HybridSystems.mode(hs,i).X.constraints])', 
       stack([h.b for h in HybridSystems.mode(hs,i).X.constraints])) for i in 1:nmodes(hs)]
 E = adjacency_matrix(hs.automaton.G) + I
