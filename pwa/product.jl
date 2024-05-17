@@ -4,16 +4,14 @@ import Polyhedra
 using HybridSystems, MathematicalSystems
 include("formula.jl")
 
-amb_dim(p) = let n = length(first(p.constraints).a);
-    let v = tovrep(intersection(p, Hyperrectangle(zeros(n),1000*ones(n))));
-        let V = stack(vertices_list(v))';
-            rank(V .- V[1,:]')
-        end 
+ambient_dim(p::HPolytope) = let v = tovrep(p)
+    let V = stack(vertices_list(v))'
+        rank(V .- V[1,:]')
     end 
-end
-fulldim(p) = LazySets.dim(p)
-zerovolume(p) = amb_dim(p) <= fulldim(p) - 1
-zerosurface(p) = amb_dim(p) <= fulldim(p) - 2
+end 
+fulldim(p::HPolyhedron) = length(first(p.constraints).a)
+zerovolume(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),1000*ones(n))); ambient_dim(p) <= n - 1 end end
+zerosurface(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),1000*ones(n))); ambient_dim(p) <= n - 2 end end
 
 function partition(d)
     V = []
@@ -56,15 +54,13 @@ function split_edge_disjunctions(E, L)
     return T, S
 end
 
-function ppwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
+function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true))
     l, d = translate(translator, f)
 
     Vp = partition(d)
     O1 = [o for (o,_) in Vp]
     V1 = [v for (_,v) in Vp]
     E1 = [(i,j) for (i,(_,v1)) = enumerate(Vp) for (j,(_,v2)) = enumerate(Vp) if (i != j) && !isempty(intersection(v1, v2)) && !zerosurface(intersection(v1, v2))]
-    q10 = [i for (i,v) in enumerate(V1) if x0 ∈ v]
-    q1T = [i for (i,v) in enumerate(V1) if xT ∈ v]
 
     V2 = collect(1:num_states(l))
     E2 = get_edges(l)
@@ -81,15 +77,14 @@ function ppwa(A, B, f::Formula, x0, xT, translator::LTLTranslator)
     E = filter(((i1,i2),) -> any(
         all(Set.(l) .⊆ Set.(O1[Ix[i2][1]])) && 
         e == (Ix[i1][2],Ix[i2][2]) for (e,l) in zip(E2,L2)), E)
-    q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q10 && q2 in q20]
-    qT = [i for (i,(q1,q2)) in enumerate(Ix) if q1 in q1T && q2 in q2T]
+    q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q20]
+    qT = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q2T]
 
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
 
-    println("constructing pwa")
     modes = [@system(x' = A*x + B*u, x ∈ HPolytope(a,b), u ∈ Universe(size(B,2))) for (a,b) in K]
     automaton = GraphAutomaton(length(modes))
     [add_transition!(automaton, i, j, k) for (k,(i,j)) in enumerate(E)]
