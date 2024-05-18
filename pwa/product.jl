@@ -95,32 +95,3 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     return h, q0, qT
 
 end
-
-function fpwa(A, B, l::Formula, x0, xT, translator::LTLTranslator)
-    hs, hq0, hqT = ppwa(A, B, l, x0, xT, translator)
-    
-    println("computing fpwa")
-    VV = [(source(hs,t),target(hs,t)) for t in HybridSystems.transitions(hs)]
-    V = Tuple.(Set([Set(m) for m in VV]))
-    M = [remove_redundant_constraints(HPolyhedron([
-        HybridSystems.mode(hs,i).X.constraints; 
-        HybridSystems.mode(hs,j).X.constraints])) for (i,j) in V]
-    Ex = [((i1,Set(v1)),(i2,Set(v2))) for (i1,v1) in enumerate(V) for (i2,v2) in enumerate(V) if (i1 != i2) && !isempty(Set(v1) ∩ Set(v2))]
-    E = [(i1,i2) for ((i1,_),(i2,_)) in Ex]
-    K = [HybridSystems.mode(hs, first(v1 ∩ v2)).X for ((_,v1),(_,v2)) in Ex]
-    qm0 = [(i,first(Set(hq0) ∩ Set(v))) for (i,v) in enumerate(V) if !isempty(Set(hq0) ∩ Set(v)) && x0 in HybridSystems.mode(hs,first(Set(hq0) ∩ Set(v))).X]
-    q0 = [i for (i,_) in qm0]
-    K0 = [HybridSystems.mode(hs,k).X for (_,k) in qm0]
-    qmT = [(i,first(Set(hqT) ∩ Set(v))) for (i,v) in enumerate(V) if !isempty(Set(hqT) ∩ Set(v)) && xT in HybridSystems.mode(hs,first(Set(hqT) ∩ Set(v))).X]
-    qT = [i for (i,_) in qmT]
-    KT = [HybridSystems.mode(hs,k).X for (_,k) in qmT]
-
-    automaton = GraphAutomaton(length(M))
-    [add_transition!(automaton, i, j, k) for (k,(i,j)) in enumerate(E)]
-    modes = [@system(x' = 0, x ∈ m) for m in M]
-    transitions = [@system(x' = A*x + B*u, x ∈ k, u ∈ Universe(size(B,2))) for k in K]
-    switchings = [AutonomousSwitching() for _ in transitions]
-    h = HybridSystem(automaton, modes, transitions, switchings)
-
-    return h, q0, qT, K0, KT
-end
