@@ -31,7 +31,7 @@ end
 (|)(f1::Atom, f2::Atom) = Or(f1, f2)
 
 function _ltl(f::HalfSpace)
-    k = string(uuid4())[1:2]
+    k = string(uuid4())
     k = replace(k, "-" => "")
     k = "o$(k)"
     return k, Dict(k => f)

@@ -1,7 +1,6 @@
 using MomentOpt, DynamicPolynomials
 using HybridSystems
 using SemialgebraicSets
-include("fpwa.jl")
 
 set(A::AbstractMatrix, b::Vector, x::Vector) = BasicSemialgebraicSet(FullSpace(), -A*x + b)
 set((A, b)::Tuple{Matrix, Vector}, x::Vector) = set(A, b, x)
