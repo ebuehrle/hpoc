@@ -17,11 +17,7 @@ println(q0)
 println(qT)
 
 c(x,u) = x'*x + u'*u
-policy = GMPPolicy(s, q0, qT, c, optimizer=Clarabel.Optimizer)
-println(HybridSystems.nmodes(policy.s.fh), " modes")
-println(HybridSystems.ntransitions(policy.s.fh), " transitions")
-println(policy.s.fq0)
-println(policy.s.fqT)
+policy = GMPPolicy(s, c, optimizer=Clarabel.Optimizer)
 
 x0 = [-1.0, -1.0, 0.0, 0.5]
 xT = [-0.0, -0.0, 0.0, 0.0]
