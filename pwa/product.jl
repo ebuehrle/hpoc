@@ -34,7 +34,7 @@ function partition(d)
         end
         V = V1
     end
-    return V
+    return collect(Set(V))
 end
 
 function split_edge_disjunctions(E, L)
