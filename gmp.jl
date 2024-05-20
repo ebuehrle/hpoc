@@ -1,7 +1,10 @@
 using Symbolics, LazySets
-using Clarabel
+using HybridSystems
+using Clarabel, Gurobi
+using Plots
 include("pwa/product.jl")
 include("pwa/gmp.jl")
+include("pwa/simulate.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
@@ -21,6 +24,18 @@ policy = GMPPolicy(s, c, optimizer=Clarabel.Optimizer)
 
 x0 = [-1.0, -1.0, 0.0, 0.5]
 xT = [-0.0, -0.0, 0.0, 0.0]
-m, p = action(policy, (q0,x0), (qT,xT))
+_, m, p = action(policy, (q0,x0), (qT,xT))
+
+q0 = [(i ∈ q0) && (x0 ∈ HybridSystems.mode(s,i).X) for i in 1:nmodes(s)]
+qT = [(i ∈ qT) && (xT ∈ HybridSystems.mode(s,i).X) for i in 1:nmodes(s)]
+x, q, u = simulate(
+    EulerSimulator(0.05, 50, Gurobi.Optimizer),
+    s,
+    ((q0,x0),) -> let (dv, _, _) = action(policy, (argmax(q0), x0), (argmax(qT), xT)); -B'*dv end,
+    (q0, x0)
+)
+
+scatter(x[:,1], x[:,2], label=objective_value(m))
+savefig("img/gmp.pdf")
 write("img/gmp.txt","$(objective_value(m))")
 write("img/gmpp.txt","$(p)")

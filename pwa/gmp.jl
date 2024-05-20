@@ -50,15 +50,15 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     f(x,u) = A*x + B*u
 
     Kf = [(set(k1, x), set(k2, x)) for (k1, k2) in p.K]
-    Kt = [(set(HybridSystems.mode(p.s, q).X, x),
-           set(HybridSystems.mode(p.s, q).X, x)) for q in qT]
     Ks = [(set(HybridSystems.mode(p.s, q).X, x),
            set(HybridSystems.mode(p.s, q).X, x)) for q in q0]
-    K = [Kf; Kt; Ks]
+    Kt = [(set(HybridSystems.mode(p.s, q).X, x),
+           set(HybridSystems.mode(p.s, q).X, x)) for q in qT]
+    K = [Kf; Ks; Kt]
 
-    Et = stack([q, nmodes(p.s)+2] for q in qT)'
     Es = stack([nmodes(p.s)+1, q] for q in q0)'
-    E = [p.E; Et; Es]
+    Et = stack([q, nmodes(p.s)+2] for q in qT)'
+    E = [p.E; Es; Et]
 
     m = GMPModel(p.optimizer)
     set_approximation_mode(m, PRIMAL_RELAXATION_MODE())
@@ -70,7 +70,7 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     modes = collect(Set(p.E))
     @variable m μ[i=1:length(K),j=1:4] Meas([x;u], support=supps[i][j])
     @objective m Min sum(Mom.(p.c(x,u), μ[:,2] + μ[:,3])) + 0.01*sum(Mom.(1, μ))
-    @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2] + μ[i,3]) .== Mom.(b, μ[i,4]) - Mom.(b, μ[i,1])
+    cn = @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2] + μ[i,3]) .== Mom.(b, μ[i,4]) - Mom.(b, μ[i,1])
     @constraint m [i=modes] sum(μ[eout(E,i),1]) == sum(μ[einc(E,i),4])
     @constraint m sum(μ[eout(E,nmodes(p.s)+1),1]) == μ0
     @constraint m sum(μ[einc(E,nmodes(p.s)+2),4]) == μT
@@ -79,8 +79,15 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     optimize!(m)
 
-    p = integrate.(1,μ[:,1])
+    pp = integrate.(1,μ[:,1])
 
-    return m, p
+    q0 = Es[argmax(pp[eout(E,nmodes(p.s)+1)]),2]
+    p0 = pp .* eout(E,q0)
+    c0 = cn[argmax(p0)]
+    v0 = first.(-dual.(c0))' * b
+    dv0 = differentiate(v0, x)
+    dv0 = [d(x0) for d in dv0]
+
+    return dv0, m, pp
 
 end

@@ -1,5 +1,6 @@
 using HybridSystems
 using JuMP
+using Graphs
 using LinearAlgebra
 using ProgressBars
 

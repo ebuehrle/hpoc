@@ -1,24 +1,25 @@
 using MomentOpt, DynamicPolynomials, Clarabel
+using Plots
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
 f(x,u) = A*x + B*u
 c(x,u) = x'*x + u'*u
-x0 = [-1.0, -1.0, 0.0, 0.5]
+x0 = [-0.8, -0.8, 0.0, 0.5]
 xT = [-0.0, -0.0, 0.0, 0.0]
 
 @polyvar x[1:4] u[1:2]
 μ0 = DiracMeasure([x;u], [x0; 0.0; 0.0])
 μT = DiracMeasure([x;u], [xT; 0.0; 0.0])
 
-K1 = @set x[1] <= -0.7 && x[2] <= -0.7
-K2 = @set -0.7 <= x[1] && x[1] <= -0.3 && x[2] <= -0.7
-K3 = @set -0.3 <= x[1] && x[2] <= -0.7
-K4 = @set x[1] <= -0.7 && -0.7 <= x[2] && x[2] <= -0.3
-K5 = @set -0.3 <= x[1] && -0.7 <= x[2] && x[2] <= -0.3
-K6 = @set x[1] <= -0.7 && -0.3 <= x[2]
-K7 = @set -0.7 <= x[1] && x[1] <= -0.3 && -0.3 <= x[2]
-K8 = @set -0.3 <= x[1] && -0.3 <= x[2]
+K1 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && x[1] <= -0.7 && x[2] <= -0.7
+K2 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && -0.7 <= x[1] && x[1] <= -0.3 && x[2] <= -0.7
+K3 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && -0.3 <= x[1] && x[2] <= -0.7
+K4 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && x[1] <= -0.7 && -0.7 <= x[2] && x[2] <= -0.3
+K5 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && -0.3 <= x[1] && -0.7 <= x[2] && x[2] <= -0.3
+K6 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && x[1] <= -0.7 && -0.3 <= x[2]
+K7 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && -0.7 <= x[1] && x[1] <= -0.3 && -0.3 <= x[2]
+K8 = @set -1.0 <= x[1] && x[1] <= 0.0 && -1.0 <= x[2] && x[2] <= 0.0 && -0.3 <= x[1] && -0.3 <= x[2]
 
 K12 = @set K1 && K2
 K23 = @set K2 && K3
@@ -105,7 +106,7 @@ dbdt = differentiate(b, x) * f(x,u)
 
 @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][j])
 @objective m Min sum(Mom.(c(x,u), μ[:,2])) + 0.01*sum(Mom.(1, μ))
-@constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
+cn = @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
 @constraint m [i=1:_modes] sum(μ[eout(i),1]) == sum(μ[einc(i),3])
 @constraint m sum(μ[eout(_modes+1),1]) == μ0
 @constraint m sum(μ[einc(_modes+2),3]) == μT
@@ -113,8 +114,12 @@ dbdt = differentiate(b, x) * f(x,u)
 @constraint m Mom.(1, μ[:,3]) .<= 1
 
 optimize!(m)
-println(sum(integrate.(c(x,u), μ[:,2])))
+
 p = integrate.(1,μ[:,1])
+@constraint m Mom.(1, μ[:,1]) .== round.(p)
+optimize!(m)
+
+println(sum(integrate.(c(x,u), μ[:,2])))
 t = integrate.(1,μ[:,2])
 o = integrate.(1,μ[:,3])
 J = integrate.(c(x,u),μ[:,2])
@@ -122,3 +127,6 @@ r = collect(zip(Tuple.(eachrow(E)),p,t,o,J))
 [println(l) for l in r]
 #println(p)
 #println(J)
+
+v = [first.(-dual.(c))'*b for c in cn]
+contourf(range(-1,0,100),range(-1,0,100),(x1,x2)->v[1](x1,x2,0,0.5))
