@@ -1,6 +1,6 @@
 using Symbolics, LazySets
 using HybridSystems
-using Clarabel, Gurobi
+using MosekTools, Gurobi
 using Plots
 include("pwa/product.jl")
 include("pwa/gmp.jl")
@@ -20,7 +20,7 @@ println(q0)
 println(qT)
 
 c(x,u) = x'*x + u'*u
-policy = GMPPolicy(s, c, optimizer=Clarabel.Optimizer)
+policy = GMPPolicy(s, c, optimizer=Mosek.Optimizer)
 
 x0 = [-1.0, -1.0, 0.0, 0.5]
 xT = [-0.0, -0.0, 0.0, 0.0]
