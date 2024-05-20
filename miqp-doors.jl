@@ -3,6 +3,7 @@ using Gurobi
 using Plots
 include("pwa/product.jl")
 include("pwa/miqp.jl")
+include("pwa/simulate.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
@@ -27,6 +28,16 @@ policy = MIQPPolicy(h, c, h=0.3, T=30, optimizer=Gurobi.Optimizer)
 
 x0 = [-0.4, 0.4, 0.0, 0.0]
 xT = [-0.0, 0.0, 0.0, 0.0]
-(u, (x, q), m) = action(policy, (q0, x0), (qT, xT))
-scatter(x[:,1], x[:,2], label=objective_value(m))
+
+up, (xp, qp), m = action(policy, (q0, x0), (qT, xT))
+
+x, q, u = simulate(
+    EulerSimulator(0.1, 50, Gurobi.Optimizer),
+    h,
+    ((q0,x0),) -> let (u, _, _) = action(policy, (argmax(q0), x0), (qT, xT)); u[1,:] end,
+    (qp[1,:], x0)
+)
+
+scatter(xp[:,1], xp[:,2], label=objective_value(m))
+scatter!(x[:,1], x[:,2], label="closed-loop")
 savefig("img/miqp-doors.pdf")
