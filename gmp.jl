@@ -29,7 +29,7 @@ _, m, p = action(policy, (q0,x0), (qT,xT))
 q0 = [(i ∈ q0) && (x0 ∈ HybridSystems.mode(s,i).X) for i in 1:nmodes(s)]
 qT = [(i ∈ qT) && (xT ∈ HybridSystems.mode(s,i).X) for i in 1:nmodes(s)]
 x, q, u = simulate(
-    EulerSimulator(0.05, 50, Gurobi.Optimizer),
+    EulerSimulator(0.05, 15, Gurobi.Optimizer),
     s,
     ((q0,x0),) -> let (dv, _, _) = action(policy, (argmax(q0), x0), (argmax(qT), xT)); -B'*dv end,
     (q0, x0)

@@ -66,16 +66,15 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     b = monomials(x, 0:approximation_degree(m))
     dbdt = differentiate(b, x) * f(x,u)
 
-    supps = [(k1,k1,k2,k2) for (k1,k2) in K]
     modes = collect(Set(p.E))
-    @variable m μ[i=1:length(K),j=1:4] Meas([x;u], support=supps[i][j])
-    @objective m Min sum(Mom.(p.c(x,u), μ[:,2] + μ[:,3])) + 0.01*sum(Mom.(1, μ))
-    cn = @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2] + μ[i,3]) .== Mom.(b, μ[i,4]) - Mom.(b, μ[i,1])
-    @constraint m [i=modes] sum(μ[eout(E,i),1]) == sum(μ[einc(E,i),4])
+    @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][1])
+    @objective m Min sum(Mom.(p.c(x,u), μ[:,2])) + 0.01*sum(Mom.(1, μ))
+    cn = @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
+    @constraint m [i=modes] sum(μ[eout(E,i),1]) == sum(μ[einc(E,i),3])
     @constraint m sum(μ[eout(E,nmodes(p.s)+1),1]) == μ0
-    @constraint m sum(μ[einc(E,nmodes(p.s)+2),4]) == μT
+    @constraint m sum(μ[einc(E,nmodes(p.s)+2),3]) == μT
     @constraint m Mom.(1, μ[:,1]) .<= 1
-    @constraint m Mom.(1, μ[:,4]) .<= 1
+    @constraint m Mom.(1, μ[:,3]) .<= 1
 
     optimize!(m)
 
