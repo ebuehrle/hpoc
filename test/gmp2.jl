@@ -98,7 +98,13 @@ contourf!(range(-0.3,-0.0,100),range(-0.7,-0.3,100),(x1,x2)->v[13](x1,x2,0.0,0.5
 plot!([-0.7, -0.3, -0.3, -0.7, -0.7], [-0.7, -0.7, -0.3, -0.3, -0.7], color=:orange, linestyle=:dash, label=false)
 
 fc(x0, p, t) = let 
-    dv0 = differentiate(v[2], x)
+    v0 = v[2]
+    if -1.0 <= x0[2] <= -0.7 v0 = v[2] end
+    if -0.7 <= x0[2] <= -0.3 v0 = v[3] end
+    if -0.3 <= x0[2] <= -0.0 && -1.0 <= x0[1] <= -0.7 v0 = v[4] end
+    if -0.3 <= x0[2] <= -0.0 && -0.7 <= x0[1] <= -0.3 v0 = v[5] end
+    if -0.3 <= x0[2] <= -0.0 && -0.3 <= x0[1] <= -0.0 v0 = v[end] end
+    dv0 = differentiate(v0, x)
     dvx0 = [d(x0) for d in dv0]
     u0 = -B'*dvx0
     A*x0 + B*u0
