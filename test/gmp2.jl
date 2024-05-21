@@ -84,8 +84,18 @@ p = integrate.(1,μ[:,1])
 @show p
 
 v = [first.(-dual.(c))'*b for c in cn]
-contourf(range(-1,0,100),range(-1,0,100),(x1,x2)->v[2](x1,x2,0,0.5))
-plot!([-0.7, -0.3, -0.3, -0.7, -0.7], [-0.7, -0.7, -0.3, -0.3, -0.7], linestyle=:dash, label=false)
+
+contourf(range(-1.0,-0.7,100),range(-1.0,-0.7,100),(x1,x2)->v[2](x1,x2,0.0,0.5))
+contourf!(range(-1.0,-0.7,100),range(-0.7,-0.3,100),(x1,x2)->v[3](x1,x2,0.0,0.5))
+contourf!(range(-1.0,-0.7,100),range(-0.3,-0.0,100),(x1,x2)->v[4](x1,x2,0.0,0.5))
+contourf!(range(-0.7,-0.3,100),range(-0.3,-0.0,100),(x1,x2)->v[5](x1,x2,0.0,0.5))
+contourf!(range(-0.3,-0.0,100),range(-0.3,-0.0,100),(x1,x2)->v[end](x1,x2,0.0,0.5))
+
+contourf!(range(-0.7,-0.3,100),range(-1.0,-0.7,100),(x1,x2)->v[11](x1,x2,0.0,0.5))
+contourf!(range(-0.3,-0.0,100),range(-1.0,-0.7,100),(x1,x2)->v[12](x1,x2,0.0,0.5))
+contourf!(range(-0.3,-0.0,100),range(-0.7,-0.3,100),(x1,x2)->v[13](x1,x2,0.0,0.5))
+
+plot!([-0.7, -0.3, -0.3, -0.7, -0.7], [-0.7, -0.7, -0.3, -0.3, -0.7], color=:orange, linestyle=:dash, label=false)
 
 fc(x0, p, t) = let 
     dv0 = differentiate(v[2], x)
@@ -95,5 +105,5 @@ fc(x0, p, t) = let
 end
 prob = ODEProblem(fc, x0, (0.0, 10.0), dt=0.05)
 sol = solve(prob, Euler())
-scatter!([Tuple(u[1:2]) for u in sol.u], label=false)
+scatter!([Tuple(u[1:2]) for u in sol.u], color=:violet, label=false)
 savefig("test/gmp2.pdf")
