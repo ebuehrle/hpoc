@@ -86,7 +86,6 @@ p = integrate.(1,μ[:,1])
 v = [first.(-dual.(c))'*b for c in cn]
 contourf(range(-1,0,100),range(-1,0,100),(x1,x2)->v[2](x1,x2,0,0.5))
 plot!([-0.7, -0.3, -0.3, -0.7, -0.7], [-0.7, -0.7, -0.3, -0.3, -0.7], linestyle=:dash, label=false)
-savefig("test/gmp2.pdf")
 
 fc(x0, p, t) = let 
     dv0 = differentiate(v[2], x)
@@ -96,4 +95,5 @@ fc(x0, p, t) = let
 end
 prob = ODEProblem(fc, x0, (0.0, 10.0), dt=0.05)
 sol = solve(prob, Euler())
-#scatter!([Tuple(u[1:2]) for u in sol.u], label=false)
+scatter!([Tuple(u[1:2]) for u in sol.u], label=false)
+savefig("test/gmp2.pdf")
