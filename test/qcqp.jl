@@ -1,10 +1,10 @@
 using Symbolics, LazySets
 using HybridSystems
-using Gurobi
+using MosekTools
 using Ipopt
 using Plots
 include("../pwa/product.jl")
-include("../pwa/miqp.jl")
+include("../pwa/gmp.jl")
 include("../pwa/qcqp.jl")
 
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
@@ -21,13 +21,10 @@ println(HybridSystems.nmodes(h), " modes")
 println(HybridSystems.ntransitions(h), " transitions")
 
 c(x,u) = sum(x.^2) + sum(u.^2)
-policy = MIQPPolicy(h, c, h=0.1, T=50, optimizer=Gurobi.Optimizer)
-up, (xp, qp), m = action(policy, (q0, x0), (qT, xT))
-P = argmax.(eachrow(qp))
-P = [p for (i,p) in enumerate(P) if i == 1 || p != P[i-1]]
-@show P
-
-# P = [1, 5, 2, 8]
+policy = GMPPolicy(h, c; optimizer=Mosek.Optimizer)
+p, E, m = action(policy, (q0, x0), (qT, xT))
+P = decode(E, p, nmodes(h)+1, nmodes(h)+2)
+P = P[2:end-1]
 
 qpolicy = QCQPPolicy(h, c; T=10, optimizer=Ipopt.Optimizer)
 uq, (xq, qq), m = action(qpolicy, (P[1], x0), (P[end], xT), P)

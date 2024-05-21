@@ -1,4 +1,6 @@
 using HybridSystems
+using Graphs
+using LinearAlgebra
 
 struct QCQPPolicy
     s::HybridSystem

@@ -1,7 +1,6 @@
 using MomentOpt, DynamicPolynomials
 using HybridSystems
 using SemialgebraicSets
-include("graph.jl")
 
 set(A::AbstractMatrix, b::Vector, x::Vector) = BasicSemialgebraicSet(FullSpace(), -A*x + b)
 set((A, b)::Tuple{Matrix, Vector}, x::Vector) = set(A, b, x)
@@ -10,6 +9,9 @@ set(X::Union{HPolytope,HPolyhedron}, x::Vector) = let
     b = stack([h.b for h in X.constraints])
     set(A, b, x)
 end
+
+eout(E,i) = E[:,1] .== i
+einc(E,i) = E[:,2] .== i
 
 struct GMPPolicy
     s::HybridSystem
@@ -76,15 +78,28 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     optimize!(m)
 
-    pp = integrate.(1,μ[:,1])
+    p = integrate.(1,μ[:,1])
 
-    q0 = Es[argmax(pp[eout(E,nmodes(p.s)+1)]),2]
-    p0 = pp .* eout(E,q0)
-    c0 = cn[argmax(p0)]
-    v0 = first.(-dual.(c0))' * b
-    dv0 = differentiate(v0, x)
-    dv0 = [d(x0) for d in dv0]
+    return p, E, m
 
-    return dv0, m, pp
+end
+
+function decode(E, p, s, t)
+
+    v = s
+    P = [s]
+    for _ in 1:length(p)
+
+        e = argmax(p .* eout(E, v))
+        v = E[e, 2]
+        push!(P, v)
+
+        if v == t break end
+
+    end
+
+    @assert P[end] == t
+
+    return P
 
 end
