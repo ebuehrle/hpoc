@@ -11,7 +11,7 @@ struct QCQPPolicy
     optimizer
 end
 
-QCQPPolicy(s::HybridSystem, c::Function; T=10, optimizer) = QCQPPolicy(
+QCQPPolicy(s::HybridSystem, c::Function; T=20, optimizer) = QCQPPolicy(
     s, c, T,
     [(stack([h.a for h in HybridSystems.mode(s,i).X.constraints])', 
       stack([h.b for h in HybridSystems.mode(s,i).X.constraints])) for i in 1:nmodes(s)],
@@ -36,7 +36,7 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
     @variable m u[1:M, 1:p.T, 1:nu]
     @variable m h[i=1:M] .>= 1e-6 start=H[i]/p.T
     
-    @objective m Min sum(p.c(x[k,:,:], u[k,:,:]) * h[k] for k=1:M)
+    @objective m Min sum(p.c(x[k,t,:], u[k,t,:]) * h[k] for t=1:p.T for k=1:M)
 
     @constraint m [k=1:M] x[k,2:end,:]' .== x[k,1:end-1,:]' + h[k]*A*x[k,1:end-1,:]' + h[k]*B*u[k,1:end-1,:]'
     @constraint m [k=1:M,t=1:p.T] p.K[P[k]][1] * x[k,t,:] .<= p.K[P[k]][2]
