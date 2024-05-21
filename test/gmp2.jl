@@ -1,4 +1,4 @@
-using MomentOpt, DynamicPolynomials, Clarabel
+using MomentOpt, DynamicPolynomials, MosekTools
 
 eout(E,i) = E[:,1] .== i
 einc(E,i) = E[:,2] .== i
@@ -44,9 +44,9 @@ c = x'*x + u'*u
 μ0 = DiracMeasure(x, [-1.0, -1.0, 0.0, 0.5])
 μT = DiracMeasure(x, [-0.0, -0.0, 0.0, 0.0])
 
-m = GMPModel(Clarabel.Optimizer)
+m = GMPModel(Mosek.Optimizer)
 set_approximation_mode(m, PRIMAL_RELAXATION_MODE())
-set_approximation_degree(m, 2)
+set_approximation_degree(m, 3)
 b = monomials(x, 0:approximation_degree(m))
 dbdt = differentiate(b, x) * f
 
@@ -63,6 +63,5 @@ modes = collect(Set(E) ∩ Set(1:9))
 optimize!(m)
 
 p = integrate.(1,μ1)
-
 @show objective_value(m)
 @show p
