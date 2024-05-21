@@ -1,6 +1,7 @@
 using MomentOpt, DynamicPolynomials
 using HybridSystems
 using SemialgebraicSets
+using HiGHS
 
 set(A::AbstractMatrix, b::Vector, x::Vector) = BasicSemialgebraicSet(FullSpace(), -A*x + b)
 set((A, b)::Tuple{Matrix, Vector}, x::Vector) = set(A, b, x)
@@ -68,23 +69,24 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     modes = collect(Set(p.E))
     @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][1])
-    @objective m Min sum(Mom.(p.c(x,u), μ[:,2]))# + 0.01*sum(Mom.(1, μ))
+    @objective m Min sum(Mom.(p.c(x,u), μ[:,2])) + 0.01*sum(Mom.(1, μ))
     cn = @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
     @constraint m [i=modes] sum(μ[eout(E,i),1]) == sum(μ[einc(E,i),3])
     @constraint m sum(μ[eout(E,nmodes(p.s)+1),3]) == μ0
     @constraint m sum(μ[einc(E,nmodes(p.s)+2),3]) == μT
-    #@constraint m Mom.(1, μ[:,1]) .<= 1
-    #@constraint m Mom.(1, μ[:,3]) .<= 1
+    @constraint m Mom.(1, μ[:,1]) .<= 1
+    @constraint m Mom.(1, μ[:,3]) .<= 1
 
     optimize!(m)
 
-    p = integrate.(1,μ[:,1])
+    P = integrate.(1,μ[:,1])
+    C = integrate.(p.c(x,u),μ[:,2])
 
-    return p, E, m
+    return C, P, E, m
 
 end
 
-function decode(E, p, s, t)
+function _decode(E, p, s, t)
 
     v = s
     P = [s]
@@ -101,5 +103,22 @@ function decode(E, p, s, t)
     @assert P[end] == t
 
     return P
+
+end
+
+function decode(E, C, s, t; optimizer=HiGHS.Optimizer)
+
+    modes = setdiff(Set(E), Set([s, t]))
+
+    m = Model(optimizer)
+    @variable m w[1:length(C)] .>= 0
+    @objective m Min w'*C
+    @constraint m [k=modes] w'*eout(E,k) == w'*einc(E,k)
+    @constraint m w'*eout(E,s) == w'*einc(E,s) + 1
+    @constraint m w'*eout(E,t) == w'*einc(E,t) - 1
+
+    optimize!(m)
+
+    return _decode(E, value.(w), s, t)
 
 end

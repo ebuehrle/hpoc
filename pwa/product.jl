@@ -60,7 +60,7 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     Vp = partition(d)
     O1 = [o for (o,_) in Vp]
     V1 = [v for (_,v) in Vp]
-    E1 = [(i,j) for (i,(_,v1)) = enumerate(Vp) for (j,(_,v2)) = enumerate(Vp) if (i != j) && !isempty(intersection(v1, v2))]
+    E1 = [(i,j) for (i,(_,v1)) = enumerate(Vp) for (j,(_,v2)) = enumerate(Vp) if (i != j) && !isempty(intersection(v1, v2)) && !zerosurface(intersection(v1, v2))]
 
     V2 = collect(1:num_states(l))
     E2 = get_edges(l)
