@@ -23,7 +23,7 @@ println(HybridSystems.ntransitions(h), " transitions")
 c(x,u) = sum(x.^2) + sum(u.^2)
 policy = GMPPolicy(h, c; optimizer=Mosek.Optimizer)
 C, p, E, m = action(policy, (q0, x0), (qT, xT))
-P = _decode(E, p, nmodes(h)+1, nmodes(h)+2)
+P = decode(E, log.(p .+ 1e-6), nmodes(h)+1, nmodes(h)+2)
 P = P[2:end-1]
 
 qpolicy = QCQPPolicy(h, c; T=10, optimizer=Ipopt.Optimizer)

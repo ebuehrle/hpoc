@@ -25,7 +25,6 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
     @assert P[end] == qT
 
     if isnothing(H) H = ones(size(P)) end
-    h = H / p.T
 
     A = HybridSystems.mode(p.s, 1).A
     B = HybridSystems.mode(p.s, 1).B
@@ -35,6 +34,7 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
     m = Model(p.optimizer)
     @variable m x[1:M, 1:p.T, 1:nx]
     @variable m u[1:M, 1:p.T, 1:nu]
+    @variable m h[i=1:M] .>= 1e-6 start=H[i]/p.T
     
     @objective m Min sum(p.c(x[k,:,:], u[k,:,:]) * h[k] for k=1:M)
 
