@@ -80,8 +80,8 @@ cn = @constraint m [i=1:length(K)] Mom.(dbdt,μ[i,2]) .== Mom.(b,μ[i,3]) - Mom.
 optimize!(m)
 
 p = integrate.(1,μ[:,1])
-@show objective_value(m)
-@show p
+write("img/gmp3.txt","$(objective_value(m))")
+write("img/gmp3p.txt","$(p)")
 
 v = [first.(-dual.(c))'*b for c in cn]
 
@@ -112,4 +112,4 @@ end
 prob = ODEProblem(fc, x0, (0.0, 10.0), dt=0.05)
 sol = solve(prob, Euler())
 scatter!([Tuple(u[1:2]) for u in sol.u], color=:violet, label=false)
-savefig("test/gmp2.pdf")
+savefig("img/gmp3.pdf")
