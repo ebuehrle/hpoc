@@ -1,4 +1,5 @@
 using MomentOpt, DynamicPolynomials, MosekTools
+using Plots
 
 eout(E,i) = E[:,1] .== i
 einc(E,i) = E[:,2] .== i
@@ -55,7 +56,7 @@ modes = collect(Set(E) ∩ Set(1:9))
 @variable m μ2[i=1:length(K)] Meas([x;u], support=K[i])
 @variable m μ3[i=1:length(K)] Meas([x;u], support=K[i])
 @objective m Min sum(Mom.(c,μ2))
-@constraint m [i=1:length(K)] Mom.(dbdt,μ2[i]) .== Mom.(b,μ3[i]) - Mom.(b,μ1[i])
+cn = @constraint m [i=1:length(K)] Mom.(dbdt,μ2[i]) .== Mom.(b,μ3[i]) - Mom.(b,μ1[i])
 @constraint m [i=modes] sum(μ1[eout(E,i)]) == sum(μ3[einc(E,i)])
 @constraint m sum(μ1[eout(E,10)]) == μ0
 @constraint m sum(μ3[einc(E,11)]) == μT
@@ -65,3 +66,8 @@ optimize!(m)
 p = integrate.(1,μ1)
 @show objective_value(m)
 @show p
+
+v = [first.(-dual.(c))'*b for c in cn]
+contourf(range(-1,0,100),range(-1,0,100),(x1,x2)->v[2](x1,x2,0,0.5))
+plot!([-0.7, -0.3, -0.3, -0.7, -0.7], [-0.7, -0.7, -0.3, -0.3, -0.7], color=:black, linestyle=:dash, label=false)
+savefig("test/gmp2.pdf")
