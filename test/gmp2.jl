@@ -32,6 +32,11 @@ E = [
     2 3;
     3 6;
     6 9;
+    
+    2 1;
+    3 2;
+    6 3;
+    9 6;
 
     9 11;
 ]
@@ -41,6 +46,7 @@ K = [
     k1, k4, k7, k8,
     k4, k7, k8, k9,
     k1, k2, k3, k6,
+    k2, k3, k6, k9,
     k9,
 ]
 
@@ -66,6 +72,8 @@ cn = @constraint m [i=1:length(K)] Mom.(dbdt,μ2[i]) .== Mom.(b,μ3[i]) - Mom.(b
 @constraint m [i=modes] sum(μ1[eout(E,i)]) == sum(μ3[einc(E,i)])
 @constraint m sum(μ1[eout(E,10)]) == μ0
 @constraint m sum(μ3[einc(E,11)]) == μT
+@constraint m Mom.(1,μ1) .<= 1
+@constraint m Mom.(1,μ3) .<= 1
 
 optimize!(m)
 
