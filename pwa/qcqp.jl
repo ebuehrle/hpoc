@@ -40,8 +40,7 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
 
     @constraint m [k=1:M] x[k,2:end,:]' .== x[k,1:end-1,:]' + h[k]*A*x[k,1:end-1,:]' + h[k]*B*u[k,1:end-1,:]'
     @constraint m [k=1:M,t=1:p.T] p.K[P[k]][1] * x[k,t,:] .<= p.K[P[k]][2]
-    @constraint m [k=2:M] x[k-1,end,:] .== x[k,1,:]
-    @constraint m [k=2:M] u[k-1,end,:] .== u[k,1,:]
+    @constraint m [k=2:M] x[k,1,:] .== x[k-1,end,:] + h[k-1]*A*x[k-1,end,:] + h[k-1]*B*u[k-1,end,:]
     @constraint m x[1,1,:] .== x0
     @constraint m x[end,end,:] .== xT
 
