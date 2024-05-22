@@ -76,9 +76,19 @@ function _union_convex(v1, v2; tol=1e-3, M=1e3)
     @constraint m sum(q2) >= 1
     optimize!(m)
 
-    if !is_solved_and_feasible(m)
-        return HPolyhedron(h)
+    if is_solved_and_feasible(m) return nothing end
+
+    for (i,c) in enumerate(v1.constraints)
+        cn = HalfSpace(-c.a, -c.b)
+        if cn ∉ v2.constraints continue end
+        j = findfirst(x->x==cn, v2.constraints)
+        hv1 = [c for (k,c) in enumerate(v1.constraints) if k != i]
+        hv2 = [c for (k,c) in enumerate(v2.constraints) if k != j]
+        ch = HPolyhedron([hv1; hv2])
+        ch = remove_redundant_constraints(ch)
+        return ch
     end
+    
     return nothing
 end
 
@@ -93,7 +103,6 @@ function _merge_modes(V, E)
             linc1 = Set([V[e[1]][2] for e in E[einc(stack(E)',i1)]])
             linc2 = Set([V[e[1]][2] for e in E[einc(stack(E)',i2)]])
             lconn = lout1 ∪ lout2 ∪ linc1 ∪ linc2
-            @show lconn, Set([v1[2]])
             if lconn != Set([v1[2]]) continue end
             v = _union_convex(v1[1], v2[1])
             if !isnothing(v)

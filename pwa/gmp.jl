@@ -109,8 +109,8 @@ function decode(E, C, s, t; optimizer=HiGHS.Optimizer)
     modes = setdiff(Set(E), Set([s, t]))
 
     m = Model(optimizer)
-    @variable m w[1:length(C)] .>= 0
-    @objective m Max w'*C
+    @variable m 0 .<= w[1:length(C)] .<= 1
+    @objective m Min -w'*C
     @constraint m [k=modes] w'*eout(E,k) == w'*einc(E,k)
     @constraint m w'*eout(E,s) == w'*einc(E,s) + 1
     @constraint m w'*eout(E,t) == w'*einc(E,t) - 1
