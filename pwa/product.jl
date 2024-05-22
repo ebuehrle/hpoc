@@ -2,14 +2,16 @@ using Spot
 using LinearAlgebra
 import Polyhedra
 using HybridSystems, MathematicalSystems
+using JuMP, HiGHS
 include("formula.jl")
+include("graph.jl")
 
 ambient_dim(p::HPolytope) = let v = tovrep(p)
     let V = stack(vertices_list(v))'
         rank(V .- V[1,:]')
     end 
 end 
-fulldim(p::HPolyhedron) = length(first(p.constraints).a)
+fulldim(p::Union{HPolytope, HPolyhedron}) = length(first(p.constraints).a)
 zerovolume(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),1000*ones(n))); ambient_dim(p) <= n - 1 end end
 zerosurface(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),1000*ones(n))); ambient_dim(p) <= n - 2 end end
 
@@ -54,6 +56,77 @@ function split_edge_disjunctions(E, L)
     return T, S
 end
 
+function _union_convex(v1, v2; tol=1e-3, M=1e3)
+    @assert fulldim(v1) == fulldim(v2)
+    n = fulldim(v1)
+
+    h = Polyhedra.hrep(Polyhedra.convexhull(
+        Polyhedra.polyhedron(v1),
+        Polyhedra.polyhedron(v2)
+    ))
+
+    m = Model(HiGHS.Optimizer)
+    @variable m x[1:n]
+    @variable m q1[1:length(v1.constraints)] Bin
+    @variable m q2[1:length(v2.constraints)] Bin
+    @constraint m h.A * x .<= h.b
+    @constraint m [k=1:length(v1.constraints)] v1.constraints[k].a' * x / norm(v1.constraints[k].a) >= v1.constraints[k].b / norm(v1.constraints[k].a) + tol - M*(1-q1[k])
+    @constraint m [k=1:length(v2.constraints)] v2.constraints[k].a' * x / norm(v2.constraints[k].a) >= v2.constraints[k].b / norm(v2.constraints[k].a) + tol - M*(1-q2[k])
+    @constraint m sum(q1) >= 1
+    @constraint m sum(q2) >= 1
+    optimize!(m)
+
+    if !is_solved_and_feasible(m)
+        return HPolyhedron(h)
+    end
+    return nothing
+end
+
+function _merge_modes(V, E)
+    for (i1,v1) in enumerate(V)
+        for (i2,v2) in enumerate(V[1:i1-1])
+            if (i1,i2) ∉ E continue end
+            if (i2,i1) ∉ E continue end
+            if v1[2] != v2[2] continue end
+            lout1 = Set([V[e[2]][2] for e in E[eout(stack(E)',i1)]])
+            lout2 = Set([V[e[2]][2] for e in E[eout(stack(E)',i2)]])
+            linc1 = Set([V[e[1]][2] for e in E[einc(stack(E)',i1)]])
+            linc2 = Set([V[e[1]][2] for e in E[einc(stack(E)',i2)]])
+            lconn = lout1 ∪ lout2 ∪ linc1 ∪ linc2
+            @show lconn, Set([v1[2]])
+            if lconn != Set([v1[2]]) continue end
+            v = _union_convex(v1[1], v2[1])
+            if !isnothing(v)
+                return (i2, i1), (v, v1[2])
+            end
+        end
+    end
+    return nothing
+end
+
+function merge_modes(V, E, q0, qT)
+    for _ in 1:length(V)
+        r = _merge_modes(V, E)
+        if isnothing(r) break end
+
+        (i1, i2), v = r
+        Vx = collect(1:length(V))
+        V = [V[1:i1-1]; v; V[i1+1:i2-1]; V[i2+1:end]]
+        Vx = [Vx[1:i2-1]; i1; Vx[i2+1:end] .- 1]
+        ix = x -> Vx[x]
+        E = [ix.(e) for e in E]
+        E = [e for e in E if e[1] != e[2]]
+        q0 = ix.(q0)
+        qT = ix.(qT)
+    end
+
+    E = collect(Set(E))
+    q0 = collect(Set(q0))
+    qT = collect(Set(qT))
+
+    return V, E, q0, qT
+end
+
 function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true))
     l, d = translate(translator, f)
 
@@ -82,6 +155,8 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
 
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
+    V, E, q0, qT = merge_modes(V, E, q0, qT)
+    
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
 

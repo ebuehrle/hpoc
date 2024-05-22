@@ -2,6 +2,7 @@ using MomentOpt, DynamicPolynomials
 using HybridSystems
 using SemialgebraicSets
 using HiGHS
+include("graph.jl")
 
 set(A::AbstractMatrix, b::Vector, x::Vector) = BasicSemialgebraicSet(FullSpace(), -A*x + b)
 set((A, b)::Tuple{Matrix, Vector}, x::Vector) = set(A, b, x)
@@ -10,9 +11,6 @@ set(X::Union{HPolytope,HPolyhedron}, x::Vector) = let
     b = stack([h.b for h in X.constraints])
     set(A, b, x)
 end
-
-eout(E,i) = E[:,1] .== i
-einc(E,i) = E[:,2] .== i
 
 struct GMPPolicy
     s::HybridSystem
