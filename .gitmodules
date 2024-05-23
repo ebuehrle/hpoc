@@ -1,0 +1,6 @@
+[submodule "interaction.jl"]
+	path = interaction.jl
+	url = https://github.com/ebuehrle/interaction.jl
+[submodule "interaction-dataset"]
+	path = interaction-dataset
+	url = https://gitlab.com/ebuehrle2/interaction-dataset

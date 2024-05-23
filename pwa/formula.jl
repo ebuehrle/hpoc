@@ -4,7 +4,7 @@ using Spot
 import Base: !, &, |
 
 abstract type Formula end
-Atom = Union{Formula, HalfSpace}
+Atom = Union{Formula, LazySets.HalfSpace}
 struct Not <: Formula
     f::Atom
 end
@@ -30,7 +30,7 @@ end
 (&)(f1::Atom, f2::Atom) = And(f1, f2)
 (|)(f1::Atom, f2::Atom) = Or(f1, f2)
 
-function _ltl(f::HalfSpace)
+function _ltl(f::LazySets.HalfSpace)
     k = string(hash(f))
     k = "o$(k)"
     return k, Dict(k => f)

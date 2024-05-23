@@ -2,7 +2,9 @@ using MomentOpt, DynamicPolynomials
 using HybridSystems
 using SemialgebraicSets
 using HiGHS
+using Ipopt
 include("graph.jl")
+include("qcqp.jl")
 
 set(A::AbstractMatrix, b::Vector, x::Vector) = BasicSemialgebraicSet(FullSpace(), -A*x + b)
 set((A, b)::Tuple{Matrix, Vector}, x::Vector) = set(A, b, x)
@@ -30,7 +32,7 @@ GMPPolicy(s, c; optimizer) = let
     GMPPolicy(s, c, K, E, optimizer)
 end
 
-function action(p::GMPPolicy, (q0,x0), (qT,xT))
+function _action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     if !(q0 isa Array) q0 = [q0] end
     if !(qT isa Array) qT = [qT] end
@@ -118,5 +120,15 @@ function decode(E, C, s, t; optimizer=HiGHS.Optimizer)
     optimize!(m)
 
     return _decode(E, value.(w), s, t)
+
+end
+
+function action(p::GMPPolicy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
+
+    C, pp, E, m = _action(policy, (q0, x0), (qT, xT))
+    P = decode(E, log.(clamp.(pp, 1e-6, 1-1e-6)), nmodes(p.s)+1, nmodes(p.s)+2)
+    P = P[2:end-1]
+    qpolicy = QCQPPolicy(s, c; T=T, optimizer=optimizer)
+    return action(qpolicy, (P[1], x0), (P[end], xT), P)
 
 end

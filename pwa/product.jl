@@ -21,7 +21,7 @@ function partition(d)
         if isempty(V)
             V = [
                 (([k],[]), HPolyhedron([v])),
-                (([],[k]), HPolyhedron([HalfSpace(-v.a,-v.b)])),
+                (([],[k]), HPolyhedron([LazySets.HalfSpace(-v.a,-v.b)])),
             ]
             continue
         end
@@ -30,7 +30,7 @@ function partition(d)
             xkp = ([xk[1];k], xk[2])
             xvp = intersection(xv, v)
             xkn = (xk[1], [xk[2];k])
-            xvn = intersection(xv, HalfSpace(-v.a,-v.b))
+            xvn = intersection(xv, LazySets.HalfSpace(-v.a,-v.b))
             if !isempty(xvp) && !zerovolume(xvp) push!(V1, (xkp, xvp)) end
             if !isempty(xvn) && !zerovolume(xvn) push!(V1, (xkn, xvn)) end
         end
@@ -79,7 +79,7 @@ function _union_convex(v1, v2; tol=1e-3, M=1e3)
     if is_solved_and_feasible(m) return nothing end
 
     for (i,c) in enumerate(v1.constraints)
-        cn = HalfSpace(-c.a, -c.b)
+        cn = LazySets.HalfSpace(-c.a, -c.b)
         if cn ∉ v2.constraints continue end
         j = findfirst(x->x==cn, v2.constraints)
         hv1 = [c for (k,c) in enumerate(v1.constraints) if k != i]
