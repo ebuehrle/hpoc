@@ -29,11 +29,13 @@ println(HybridSystems.ntransitions(s), " transitions")
 println(q0)
 println(qT)
 
-c(x,u) = x'*x + u'*u + 1
+c(x,u) = x'*x + u'*u + 0.1
 policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
 C, p, E, m = _action(policy, (q0, x0), (qT, xT))
 P = decode(E, log.(clamp.(p, 1e-6, 1-1e-6)), nmodes(s)+1, nmodes(s)+2)
 P = P[2:end-1]
+println(P)
+[println(HybridSystems.mode(s,p).X.constraints) for p in P]
 
 qpolicy = QCQPPolicy(s, c; T=20, optimizer=Ipopt.Optimizer)
 uq, (xq, qq), m2 = action(qpolicy, (P[1], x0), (P[end], xT), P)

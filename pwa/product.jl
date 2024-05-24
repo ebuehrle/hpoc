@@ -169,8 +169,8 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     println("removing redundant constraints")
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
-    # println("merging equivalent modes")
-    # V, E, q0, qT = merge_modes(V, E, q0, qT)
+    println("merging equivalent modes")
+    V, E, q0, qT = merge_modes(V, E, q0, qT)
     
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]

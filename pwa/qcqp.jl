@@ -34,7 +34,7 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
     m = Model(p.optimizer)
     @variable m x[1:M, 1:p.T, 1:nx]
     @variable m u[1:M, 1:p.T, 1:nu]
-    @variable m h[i=1:M] .>= 0 start=H[i]/p.T
+    @variable m h[i=1:M] .>= 1e-4 start=H[i]/p.T
     @variable m s[1:M, 1:p.T] .>= 0
     
     @objective m Min sum(p.c(x[k,t,:], u[k,t,:]) * h[k] for t=1:p.T for k=1:M) + 1000*sum(s.^2)
