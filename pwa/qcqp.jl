@@ -35,11 +35,12 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
     @variable m x[1:M, 1:p.T, 1:nx]
     @variable m u[1:M, 1:p.T, 1:nu]
     @variable m h[i=1:M] .>= 0 start=H[i]/p.T
+    @variable m s[1:M, 1:p.T] .>= 0
     
-    @objective m Min sum(p.c(x[k,t,:], u[k,t,:]) * h[k] for t=1:p.T for k=1:M)
+    @objective m Min sum(p.c(x[k,t,:], u[k,t,:]) * h[k] for t=1:p.T for k=1:M) + 1000*sum(s.^2)
 
     @constraint m [k=1:M] x[k,2:end,:]' .== x[k,1:end-1,:]' + h[k]*A*x[k,1:end-1,:]' + h[k]*B*u[k,1:end-1,:]'
-    @constraint m [k=1:M,t=1:p.T] p.K[P[k]][1] * x[k,t,:] .<= p.K[P[k]][2]
+    @constraint m [k=1:M,t=1:p.T] p.K[P[k]][1] / norm(p.K[P[k]][1]) * x[k,t,:] .<= p.K[P[k]][2] / norm(p.K[P[k]][1]) .+ s[k,t]
     @constraint m [k=2:M] x[k,1,:] .== x[k-1,end,:] + h[k-1]*A*x[k-1,end,:] + h[k-1]*B*u[k-1,end,:]
     @constraint m x[1,1,:] .== x0
     @constraint m x[end,end,:] .== xT
