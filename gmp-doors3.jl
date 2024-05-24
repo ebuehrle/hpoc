@@ -36,8 +36,8 @@ P = decode(E, log.(clamp.(p, 1e-6, 1-1e-6)), nmodes(s)+1, nmodes(s)+2)
 P = P[2:end-1]
 
 qpolicy = QCQPPolicy(s, c; T=20, optimizer=Ipopt.Optimizer)
-uq, (xq, qq), m = action(qpolicy, (P[1], x0), (P[end], xT), P)
-scatter(xq[:,1],xq[:,2])
+uq, (xq, qq), m2 = action(qpolicy, (P[1], x0), (P[end], xT), P)
+scatter(xq[:,1],xq[:,2],label="$(round(objective_value(m), digits=2)) / $(round(objective_value(m2), digits=2))")
 plot!([-0.3, -0.2, -0.2, -0.3, -0.3], [0.0, 0.0, 0.2, 0.2, 0.0], color=:black, fill=true, fillalpha=0.2, label=false)
 plot!([-0.3, -0.2, -0.2, -0.3, -0.3], [0.3, 0.3, 0.5, 0.5, 0.3], color=:black, fill=true, fillalpha=0.2, label=false)
 plot!([-0.1, -0.0, -0.0, -0.1, -0.1], [0.1, 0.1, 0.5, 0.5, 0.1], color=:black, fill=true, fillalpha=0.2, label=false)

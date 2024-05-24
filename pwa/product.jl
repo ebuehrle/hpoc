@@ -153,15 +153,16 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     q20 = [get_init_state_number(l),]
     q2T = collect(reduce(∪, get_rabin_acceptance(l)[1]))
 
-    println("constructing product automaton")
+    println("constructing product automaton vertices")
     V = [(v1,v2) for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
     O = [O1[i1] for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
     Ix = [(i1,i2) for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
     E = [(i1,i2) for (i1,((i11,i12),v1)) in enumerate(zip(Ix,V)) for (i2,((i21,i22),v2)) in enumerate(zip(Ix,V)) if (i11,i21) ∈ E1 && (i12,i22) ∈ E2]
-
+    
+    println("constructing product automaton edges")
     E = filter(((i1,i2),) -> any(
-        all(Set.(l) .⊆ Set.(O1[Ix[i2][1]])) && 
-        e == (Ix[i1][2],Ix[i2][2]) for (e,l) in zip(E2,L2)), E)
+        e == (Ix[i1][2],Ix[i2][2]) &&
+        all(Set.(l) .⊆ Set.(O1[Ix[i2][1]])) for (e,l) in zip(E2,L2)), E)
     q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q20]
     qT = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q2T]
 
