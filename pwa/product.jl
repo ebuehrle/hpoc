@@ -3,6 +3,7 @@ using LinearAlgebra
 import Polyhedra
 using HybridSystems, MathematicalSystems
 using JuMP, HiGHS
+using ProgressBars
 include("formula.jl")
 include("graph.jl")
 
@@ -17,7 +18,8 @@ zerosurface(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperr
 
 function partition(d)
     V = []
-    for (k,v) in d
+    println("partitioning")
+    for (k,v) in ProgressBar(d)
         if isempty(V)
             V = [
                 (([k],[]), HPolyhedron([v])),
@@ -151,6 +153,7 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     q20 = [get_init_state_number(l),]
     q2T = collect(reduce(∪, get_rabin_acceptance(l)[1]))
 
+    println("constructing product automaton")
     V = [(v1,v2) for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
     O = [O1[i1] for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
     Ix = [(i1,i2) for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]
@@ -162,9 +165,11 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q20]
     qT = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q2T]
 
+    println("removing redundant constraints")
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
-    V, E, q0, qT = merge_modes(V, E, q0, qT)
+    # println("merging equivalent modes")
+    # V, E, q0, qT = merge_modes(V, E, q0, qT)
     
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
