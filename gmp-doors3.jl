@@ -24,7 +24,7 @@ end
 x0 = [-0.41, 0.41, 0.0, 0.0]
 xT = [-0.0, 0.0, 0.0, 0.0]
 
-s, q0, qT = PPWA(A, B, l)
+s, q0, qT = PPWA(A, B, l, merge_modes=false)
 policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
 uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 

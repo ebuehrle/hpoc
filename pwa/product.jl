@@ -107,7 +107,7 @@ function _merge_modes(V, E)
     return nothing
 end
 
-function merge_modes(V, E, q0, qT)
+function merge_eq_modes(V, E, q0, qT)
     for _ in 1:length(V)
         r = _merge_modes(V, E)
         if isnothing(r) break end
@@ -130,7 +130,7 @@ function merge_modes(V, E, q0, qT)
     return V, E, q0, qT
 end
 
-function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true))
+function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true); merge_modes=true)
     l, d = translate(translator, f)
 
     Vp = partition(d)
@@ -161,8 +161,10 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     println("removing redundant constraints")
     V = [(remove_redundant_constraints(k),i) for (k,i) in V]
 
-    println("merging equivalent modes")
-    V, E, q0, qT = merge_modes(V, E, q0, qT)
+    if merge_modes
+        println("merging equivalent modes")
+        V, E, q0, qT = merge_eq_modes(V, E, q0, qT)
+    end
     
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
