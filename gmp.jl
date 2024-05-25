@@ -7,6 +7,7 @@ include("pwa/product.jl")
 include("pwa/gmp.jl")
 include("pwa/qcqp.jl")
 
+c(x,u) = x'*x + u'*u
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
 l = let x = Symbolics.variables(:x, 1:4)
@@ -16,19 +17,11 @@ end
 x0 = [-1.0, -1.0, 0.0, 0.5]
 xT = [-0.0, -0.0, 0.0, 0.0]
 
-h, q0, qT = PPWA(A, B, l)
-println(HybridSystems.nmodes(h), " modes")
-println(HybridSystems.ntransitions(h), " transitions")
+s, q0, qT = PPWA(A, B, l)
+policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
+uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
-c(x,u) = x'*x + u'*u + 1
-policy = GMPPolicy(h, c; optimizer=Mosek.Optimizer)
-C, p, E, m = action(policy, (q0, x0), (qT, xT))
-P = decode(E, log.(clamp.(p, 1e-6, 1-1e-6)), nmodes(h)+1, nmodes(h)+2)
-P = P[2:end-1]
-
-qpolicy = QCQPPolicy(h, c; T=30, optimizer=Ipopt.Optimizer)
-uq, (xq, qq), m = action(qpolicy, (P[1], x0), (P[end], xT), P)
-scatter(xq[:,1],xq[:,2])
+scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
 savefig("img/gmp.pdf")
-write("img/gmp.txt","$(objective_value(m))")
-write("img/gmpp.txt","$(p)")
+println(HybridSystems.nmodes(s), " modes")
+println(HybridSystems.ntransitions(s), " transitions")
