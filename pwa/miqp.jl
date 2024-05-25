@@ -36,7 +36,7 @@ function action(p::MIQPPolicy, (q0,x0), (qT,xT))
     @variable m x[1:p.T,1:nx]
     @variable m u[1:p.T,1:nu]
     @variable m q[1:p.T,1:nmodes(p.s)] Bin
-    @objective m Min p.c(x,u) * p.h
+    @objective m Min sum(p.c(x[t,:], u[t,:]) * p.h for t=1:p.T)
     @constraint m x[1,:] .== x0
     @constraint m x[end,:] .== xT
     @constraint m x[2:end,:]' .== x[1:end-1,:]' + p.h*A*x[1:end-1,:]' + p.h*B*u[1:end-1,:]'
