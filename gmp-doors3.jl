@@ -23,10 +23,13 @@ l = let x = Symbolics.variables(:x, 1:4)
 end
 x0 = [-0.41, 0.41, 0.0, 0.0]
 xT = [-0.0, 0.0, 0.0, 0.0]
+x02 = [-0.41, 0.19, 0.0, 0.0]
+xT2 = [-0.0, 0.0, 0.0, 0.0]
 
 s, q0, qT = PPWA(A, B, l, merge_modes=false)
 policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
 uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
+uq2, xq2, qq2, mq2, m2 = extract(policy, (q0, x02), (qT, xT2); T=20, optimizer=Ipopt.Optimizer)
 
 println(HybridSystems.nmodes(s), " modes")
 println(HybridSystems.ntransitions(s), " transitions")
@@ -34,6 +37,7 @@ println(q0)
 println(qT)
 
 scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
+scatter!(xq2[:,1],xq2[:,2],label="J = $(round(objective_value(mq2), digits=2)) ($(round(objective_value(m2), digits=2)))")
 plot!([-0.3, -0.2, -0.2, -0.3, -0.3], [0.0, 0.0, 0.2, 0.2, 0.0], color=:black, fill=true, fillalpha=0.2, label=false)
 plot!([-0.3, -0.2, -0.2, -0.3, -0.3], [0.3, 0.3, 0.5, 0.5, 0.3], color=:black, fill=true, fillalpha=0.2, label=false)
 plot!([-0.1, -0.0, -0.0, -0.1, -0.1], [0.1, 0.1, 0.5, 0.5, 0.1], color=:black, fill=true, fillalpha=0.2, label=false)
