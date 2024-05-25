@@ -47,4 +47,4 @@ plot!([-0.3, -0.2, -0.2, -0.3, -0.3], [0.2, 0.2, 0.3, 0.3, 0.2], color=:red, lin
 plot!([-0.2, -0.1, -0.1, -0.2, -0.2], [0.0, 0.0, 0.2, 0.2, 0.0], color=:red, linestyle=:dash, label=false)
 plot!([-0.1, -0.0, -0.0, -0.1, -0.1], [0.0, 0.0, 0.1, 0.1, 0.0], color=:blue, linestyle=:dash, label=false)
 plot!([-0.6, -0.0, -0.0, -0.6, -0.6], [0.0, 0.0, 0.5, 0.5, 0.0], color=:black, label=false)
-savefig("img/gmp-doors3.pdf")
+savefig("img/gmp-doors.pdf")
