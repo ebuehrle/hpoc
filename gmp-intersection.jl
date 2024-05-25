@@ -1,11 +1,11 @@
+include("PWA.jl/PWA.jl")
 using Symbolics, LazySets
 using HybridSystems
+using JuMP
 using MosekTools
 using Ipopt
 using Plots
-include("pwa/product.jl")
-include("pwa/gmp.jl")
-include("pwa/qcqp.jl")
+using .PWA
 
 c(x,u) = x'*x + u'*u
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]

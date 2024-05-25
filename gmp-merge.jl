@@ -1,12 +1,13 @@
+include("PWA.jl/PWA.jl")
 using Symbolics, LazySets
 using HybridSystems
+using JuMP
 using MosekTools
 using Ipopt
 using Plots
-include("pwa/product.jl")
-include("pwa/gmp.jl")
-include("pwa/qcqp.jl")
+using .PWA
 
+c(x,u) = x'*x + u'*u
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
 l = let x = Symbolics.variables(:x, 1:4)
@@ -18,20 +19,10 @@ x0 = [-10.0, -2.0, 10.0, 0.0]
 xT = [-0.0, -0.0, 10.0, 0.0]
 
 s, q0, qT = PPWA(A, B, l)
+policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
+uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
+
+scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
+savefig("img/gmp-merge.pdf")
 println(HybridSystems.nmodes(s), " modes")
 println(HybridSystems.ntransitions(s), " transitions")
-println(q0)
-println(qT)
-
-c(x,u) = x'*x + u'*u + 1
-policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
-C, p, E, m = action(policy, (q0, x0), (qT, xT))
-P = decode(E, log.(clamp.(p, 1e-6, 1-1e-6)), nmodes(s)+1, nmodes(s)+2)
-P = P[2:end-1]
-
-qpolicy = QCQPPolicy(s, c; T=30, optimizer=Ipopt.Optimizer)
-uq, (xq, qq), m = action(qpolicy, (P[1], x0), (P[end], xT), P)
-scatter(xq[:,1],xq[:,2])
-savefig("img/gmp-merge.pdf")
-write("img/gmp-merge.txt","$(objective_value(m))")
-write("img/gmpp-merge.txt","$(p)")
