@@ -32,7 +32,7 @@ GMPPolicy(s, c; optimizer) = let
     GMPPolicy(s, c, K, E, optimizer)
 end
 
-function _action(p::GMPPolicy, (q0,x0), (qT,xT))
+function action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     if !(q0 isa Array) q0 = [q0] end
     if !(qT isa Array) qT = [qT] end
@@ -79,10 +79,7 @@ function _action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     optimize!(m)
 
-    P = integrate.(1,μ[:,1])
-    C = integrate.(p.c(x,u),μ[:,2])
-
-    return C, P, E, m
+    return μ, E, K, m
 
 end
 
@@ -123,12 +120,20 @@ function decode(E, C, s, t; optimizer=HiGHS.Optimizer)
 
 end
 
-function action(p::GMPPolicy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
+function extract(s, c, μ, E::AbstractMatrix, x0, xT; T=20, optimizer=Ipopt.Optimizer)
 
-    C, pp, E, m = _action(policy, (q0, x0), (qT, xT))
-    P = decode(E, log.(clamp.(pp, 1e-6, 1-1e-6)), nmodes(p.s)+1, nmodes(p.s)+2)
+    pp = integrate.(1,μ[:,1])
+    P = decode(E, log.(clamp.(pp, 1e-6, 1-1e-6)), nmodes(s)+1, nmodes(s)+2)
     P = P[2:end-1]
     qpolicy = QCQPPolicy(s, c; T=T, optimizer=optimizer)
     return action(qpolicy, (P[1], x0), (P[end], xT), P)
+
+end
+
+function extract(p::GMPPolicy, (q0, x0)::Tuple{Vector{Int}, Vector}, (qT, xT)::Tuple{Vector{Int}, Vector}; T=20, optimizer=Ipopt.Optimizer)
+
+    μ, E, K, m = action(p, (q0, x0), (qT, xT))
+    x, u, q, o = extract(p.s, p.c, μ, E, x0, xT, T=T, optimizer=optimizer)
+    return x, u, q, o, m
 
 end

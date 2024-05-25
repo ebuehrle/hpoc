@@ -51,6 +51,6 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
     ur = reshape(value.(u), (M*p.T,nu))
     qr = repeat(P, p.T)
 
-    return ur, (xr, qr), m
+    return ur, xr, qr, m
 
 end
