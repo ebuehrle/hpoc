@@ -5,7 +5,7 @@ include("pwa/product.jl")
 include("pwa/miqp.jl")
 include("pwa/simulate.jl")
 
-c(x,u) = x'*x + u'*u + 0.1
+c(x,u) = x'*x + u'*u
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
 l = let x = Symbolics.variables(:x, 1:4)
