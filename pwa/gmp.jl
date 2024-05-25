@@ -122,11 +122,12 @@ end
 
 function extract(s, c, μ, E::AbstractMatrix, x0, xT; T=20, optimizer=Ipopt.Optimizer)
 
-    pp = integrate.(1,μ[:,1])
-    P = decode(E, log.(clamp.(pp, 1e-6, 1-1e-6)), nmodes(s)+1, nmodes(s)+2)
+    p = integrate.(1, μ[:,1])
+    H = integrate.(1, μ[:,2])
+    P = decode(E, log.(clamp.(p, 1e-6, 1-1e-6)), nmodes(s)+1, nmodes(s)+2)
     P = P[2:end-1]
     qpolicy = QCQPPolicy(s, c; T=T, optimizer=optimizer)
-    return action(qpolicy, (P[1], x0), (P[end], xT), P)
+    return action(qpolicy, (P[1], x0), (P[end], xT), P, H)
 
 end
 
