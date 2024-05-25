@@ -83,18 +83,7 @@ function _union_convex(v1, v2; tol=1e-3, M=1e3)
 
     if is_solved_and_feasible(m) return nothing end
 
-    for (i,c) in enumerate(v1.constraints)
-        cn = LazySets.HalfSpace(-c.a, -c.b)
-        if cn ∉ v2.constraints continue end
-        j = findfirst(x->x==cn, v2.constraints)
-        hv1 = [c for (k,c) in enumerate(v1.constraints) if k != i]
-        hv2 = [c for (k,c) in enumerate(v2.constraints) if k != j]
-        ch = HPolyhedron([hv1; hv2])
-        ch = remove_redundant_constraints(ch)
-        return ch
-    end
-    
-    return nothing
+    return HPolyhedron(h)
 end
 
 function _merge_modes(V, E)
