@@ -59,6 +59,9 @@ function split_edge_disjunctions(E, L)
 end
 
 function _union_convex(v1, v2; tol=1e-3, M=1e3)
+    if v1 ⊆ v2 return v2 end
+    if v2 ⊆ v1 return v1 end
+
     @assert fulldim(v1) == fulldim(v2)
     n = fulldim(v1)
 
