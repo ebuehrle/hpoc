@@ -13,8 +13,8 @@ ambient_dim(p::HPolytope) = let v = tovrep(p)
     end 
 end 
 fulldim(p::Union{HPolytope, HPolyhedron}) = length(first(p.constraints).a)
-zerovolume(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),1000*ones(n))); ambient_dim(p) <= n - 1 end end
-zerosurface(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),1000*ones(n))); ambient_dim(p) <= n - 2 end end
+zerovolume(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),10000*ones(n))); !isempty(p) && ambient_dim(p) <= n - 1 end end
+zerosurface(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperrectangle(zeros(n),10000*ones(n))); !isempty(p) && ambient_dim(p) <= n - 2 end end
 
 function partition(d)
     V = []
