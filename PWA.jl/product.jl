@@ -71,6 +71,7 @@ function _union_convex(v1, v2; tol=1e-3, M=1e3)
     ))
 
     m = Model(HiGHS.Optimizer)
+    set_silent(m)
     @variable m x[1:n]
     @variable m q1[1:length(v1.constraints)] Bin
     @variable m q2[1:length(v2.constraints)] Bin
@@ -108,7 +109,7 @@ function _merge_modes(V, E)
 end
 
 function merge_eq_modes(V, E, q0, qT)
-    for _ in 1:length(V)
+    for _ in ProgressBar(1:length(V))
         r = _merge_modes(V, E)
         if isnothing(r) break end
 
@@ -158,13 +159,13 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q20]
     qT = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q2T]
 
-    println("removing redundant constraints")
-    V = [(remove_redundant_constraints(k),i) for (k,i) in V]
-
     if merge_modes
         println("merging equivalent modes")
         V, E, q0, qT = merge_eq_modes(V, E, q0, qT)
     end
+
+    println("removing redundant constraints")
+    V = [(remove_redundant_constraints(k),i) for (k,i) in V]
     
     K = [k.constraints for (k,_) in V]
     K = [(stack(c.a for c in h)', [c.b for c in h]) for h in K]
