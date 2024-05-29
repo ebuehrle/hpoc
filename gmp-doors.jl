@@ -19,7 +19,7 @@ l = let x = Symbolics.variables(:x, 1:4)
     w2 = HalfSpace(-0.3 <= x[1], x) & HalfSpace(x[1] <= -0.2, x) & HalfSpace(0.3 <= x[2], x) & HalfSpace(x[2] <= 0.5, x)
     w3 = HalfSpace(-0.1 <= x[1], x) & HalfSpace(x[1] <= -0.0, x) & HalfSpace(0.1 <= x[2], x) & HalfSpace(x[2] <= 0.5, x)
     room = HalfSpace(-0.6 <= x[1], x) & HalfSpace(x[1] <= -0.0, x) & HalfSpace(0.0 <= x[2], x) & HalfSpace(x[2] <= 0.5, x)
-    lf = G(room) & U(!d1,k1) & U(!d2,k2) & G(!w1) & G(!w2) & G(!w3)
+    G(room) & U(!d1,k1) & U(!d2,k2) & G(!w1) & G(!w2) & G(!w3)
 end
 x0 = [-0.41, 0.41, 0.0, 0.0]
 xT = [-0.0, 0.0, 0.0, 0.0]
