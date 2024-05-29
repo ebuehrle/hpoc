@@ -34,4 +34,5 @@ plot!([-0.9, -0.8, -0.8, -0.9, -0.9], [-0.6, -0.6, -0.4, -0.4, -0.6], color=:yel
 plot!([-0.6, -0.4, -0.4, -0.6, -0.6], [-0.6, -0.6, -0.4, -0.4, -0.6], color=:blue, fill=true, fillalpha=0.2, label=false)
 plot!([-0.5, -0.2, -0.2, -0.5, -0.5], [-0.9, -0.9, -0.8, -0.8, -0.9], color=:red, fill=true, fillalpha=0.2, label=false)
 plot!([-0.4, -0.3, -0.3, -0.4, -0.4], [-0.2, -0.2, -0.1, -0.1, -0.2], color=:green, fill=true, fillalpha=0.2, label=false)
+plot!([-1.1,  0.1,  0.1, -1.1, -1.1], [-1.1, -1.1,  0.1,  0.1, -1.1], color=:black, label=false)
 savefig("img/stlcg-2.pdf")
