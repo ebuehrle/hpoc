@@ -3,7 +3,7 @@ using LinearAlgebra
 import Polyhedra
 using HybridSystems, MathematicalSystems
 using JuMP, HiGHS
-using ProgressBars
+using ProgressMeter
 include("formula.jl")
 include("graph.jl")
 
@@ -19,7 +19,7 @@ zerosurface(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperr
 function partition(d)
     V = []
     println("partitioning")
-    for (k,v) in ProgressBar(d)
+    @showprogress for (k,v) in d
         if isempty(V)
             V = [
                 (([k],[]), HPolyhedron([v])),
@@ -71,6 +71,7 @@ function _union_convex(v1, v2; tol=1e-3, M=1e3)
     ))
 
     m = Model(HiGHS.Optimizer)
+    set_silent(m)
     @variable m x[1:n]
     @variable m q1[1:length(v1.constraints)] Bin
     @variable m q2[1:length(v2.constraints)] Bin
@@ -108,7 +109,7 @@ function _merge_modes(V, E)
 end
 
 function merge_eq_modes(V, E, q0, qT)
-    for _ in 1:length(V)
+    @showprogress for _ in 1:length(V)
         r = _merge_modes(V, E)
         if isnothing(r) break end
 
@@ -130,7 +131,7 @@ function merge_eq_modes(V, E, q0, qT)
     return V, E, q0, qT
 end
 
-function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true); merge_modes=true)
+function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true); merge_modes=true, remove_redundant=true)
     l, d = translate(translator, f)
 
     h = reduce(merge, x.f for x in values(d))
@@ -161,8 +162,10 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
     q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q20]
     qT = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q2T]
 
-    println("removing redundant constraints")
-    V = [(remove_redundant_constraints(k),i) for (k,i) in V]
+    if remove_redundant
+        println("removing redundant constraints")
+        V = @showprogress [(remove_redundant_constraints(k),i) for (k,i) in V]
+    end
 
     if merge_modes
         println("merging equivalent modes")

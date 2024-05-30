@@ -2,7 +2,6 @@ using HybridSystems
 using JuMP
 using Graphs
 using LinearAlgebra
-using ProgressBars
 
 function simulate(s::HybridSystem, Cx::Array, Cq::Array, Cu::Array, xo::Matrix, 
     qo::Matrix, uo::Matrix; dt::Float64, optimizer)
@@ -83,7 +82,7 @@ function simulate(sim::EulerSimulator, s::HybridSystem, p::Function, (q0, x0)::T
     q = [q0'; zeros(sim.T-1,nq)]
     u = zeros(sim.T, nu)
 
-    for t in ProgressBar(2:sim.T)
+    for t in 2:sim.T
         u0 = p((q0, x0))
         x0, q0, _ = euler(s, x0, q0, u0, dt=sim.dt, optimizer=sim.optimizer)
         x0 = x0[end,:]
