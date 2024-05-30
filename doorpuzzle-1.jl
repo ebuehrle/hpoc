@@ -31,19 +31,20 @@ l = let x = Symbolics.variables(:x, 1:4)
 
     room = And_([HalfSpace(0.00 <= x[1], x), HalfSpace(x[1] <= 1.00, x), HalfSpace(-1.00 <= x[2], x), HalfSpace(x[2] <= -0.00, x)])
 
-    G(room) & G(!w1) & G(!w2) & G(!w3) & G(!w4) & G(!w5) & U(!d5,k5) & U(!d4,k4)
+    G(room) & G(!w1) & G(!w2) & G(!w3) & G(!w4) & G(!w5) & U(!d5,k5) & U(!d4,k4)# & U(!d3,k3) & U(!d2,k2) & U(!d1,k1)
 end
 x0 = [0.55, -0.75, 0.0, 0.0]
 xT = [0.0, 0.0, 0.0, 0.0]
 
 s, q0, qT = PPWA(A, B, l, merge_modes=false)
-policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
-uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
 println(HybridSystems.nmodes(s), " modes")
 println(HybridSystems.ntransitions(s), " transitions")
 println(q0)
 println(qT)
+
+policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
+uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
 scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
 plot!([0.52, 0.73, 0.73, 0.52, 0.52], [-1.00, -1.00, -0.77, -0.77, -1.00], color=:green, linestyle=:dash, label=false)

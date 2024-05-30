@@ -78,7 +78,7 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     @constraint m Mom.(1, μ[:,1]) .<= 1
     @constraint m Mom.(1, μ[:,3]) .<= 1
 
-    println("calling optimizer")
+    println("setting up SDP")
     optimize!(m)
 
     return μ, E, K, m
