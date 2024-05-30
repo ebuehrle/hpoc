@@ -12,6 +12,9 @@ struct And <: Formula
     f1::Atom
     f2::Atom
 end
+struct And_ <: Formula
+    f::Vector{HalfSpace}
+end
 struct Or <: Formula
     f1::Atom
     f2::Atom
@@ -30,10 +33,21 @@ end
 (&)(f1::Atom, f2::Atom) = And(f1, f2)
 (|)(f1::Atom, f2::Atom) = Or(f1, f2)
 
+struct Conj f::Dict end
+
+function issatisfied(f::Conj, op::Array, on::Array)
+    return keys(f.f) ⊆ op
+end
+
+_to_lit(x) = "o$(x)"
+
 function _ltl(f::LazySets.HalfSpace)
-    k = string(hash(f))
-    k = "o$(k)"
-    return k, Dict(k => f)
+    k = _to_lit(hash(f))
+    return k, Dict(k => Conj(Dict(k => f)))
+end
+function _ltl(f::And_)
+    k = _to_lit(hash(f))
+    return k, Dict(k => Conj(Dict(_to_lit(hash(h)) => h for h in f.f)))
 end
 function _ltl(f::Not)
     s1, d1 = _ltl(f.f)

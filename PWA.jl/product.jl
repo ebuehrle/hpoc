@@ -133,8 +133,11 @@ end
 function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true); merge_modes=true)
     l, d = translate(translator, f)
 
-    Vp = partition(d)
+    h = reduce(merge, x.f for x in values(d))
+
+    Vp = partition(h)
     O1 = [o for (o,_) in Vp]
+    O1 = map(o -> let k = collect(keys(d)); satisfied = [issatisfied(d[x], o[1], o[2]) for x in k]; (k[satisfied], k[(!).(satisfied)]) end, O1)
     V1 = [v for (_,v) in Vp]
     E1 = [(i,j) for (i,(_,v1)) = enumerate(Vp) for (j,(_,v2)) = enumerate(Vp) if (i != j) && !isempty(intersection(v1, v2)) && !zerosurface(intersection(v1, v2))]
 
