@@ -27,16 +27,16 @@ function partition(d)
             ]
             continue
         end
-        V1 = []
-        for (xk,xv) in V
-            xkp = ([xk[1];k], xk[2])
-            xvp = intersection(xv, v)
-            xkn = (xk[1], [xk[2];k])
-            xvn = intersection(xv, LazySets.HalfSpace(-v.a,-v.b))
-            if !isempty(xvp) && !zerovolume(xvp) push!(V1, (xkp, xvp)) end
-            if !isempty(xvn) && !zerovolume(xvn) push!(V1, (xkn, xvn)) end
-        end
-        V = V1
+
+        w = LazySets.HalfSpace(-v.a,-v.b)
+
+        vp = collect((([xk[1];k], xk[2]), intersection(xv, v)) for (xk,xv) in V)
+        vpne = map(((x,v),)->!isempty(v) && !zerovolume(v), vp)
+        
+        vn = collect(((xk[1], [xk[2];k]), intersection(xv, w)) for (xk,xv) in V)
+        vnne = map(((x,v),)->!isempty(v) && !zerovolume(v), vn)
+        
+        V = [vp[vpne]; vn[vnne]]
     end
     return collect(Set(V))
 end
