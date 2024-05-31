@@ -13,11 +13,11 @@ B = [0 0; 0 0; 1 0; 0 1]
 l = "G(room) & (!d5 U k5) & (!d4 U k4) & (!d3 U k3) & (!d2 U k2) & (!d1 U k1)"
 
 V = let x = Symbolics.variables(:x, 1:4)
-    k1 = HPolyhedron([HalfSpace(0.52 <= x[1], x), HalfSpace(x[1] <= 0.73, x), HalfSpace(-1.00 <= x[2], x), HalfSpace(x[2] <= -0.77, x)])
-    k2 = HPolyhedron([HalfSpace(0.27 <= x[1], x), HalfSpace(x[1] <= 0.48, x), HalfSpace(-0.77 <= x[2], x), HalfSpace(x[2] <= -0.52, x)])
-    k3 = HPolyhedron([HalfSpace(0.00 <= x[1], x), HalfSpace(x[1] <= 0.23, x), HalfSpace(-1.00 <= x[2], x), HalfSpace(x[2] <= -0.77, x)])
-    k4 = HPolyhedron([HalfSpace(0.77 <= x[1], x), HalfSpace(x[1] <= 1.00, x), HalfSpace(-1.00 <= x[2], x), HalfSpace(x[2] <= -0.77, x)])
-    k5 = HPolyhedron([HalfSpace(0.27 <= x[1], x), HalfSpace(x[1] <= 0.48, x), HalfSpace(-0.48 <= x[2], x), HalfSpace(x[2] <= -0.27, x)])
+    k1 = HPolyhedron([HalfSpace(0.55 <= x[1], x), HalfSpace(x[1] <= 0.70, x), HalfSpace(-0.95 <= x[2], x), HalfSpace(x[2] <= -0.80, x)])
+    k2 = HPolyhedron([HalfSpace(0.30 <= x[1], x), HalfSpace(x[1] <= 0.45, x), HalfSpace(-0.70 <= x[2], x), HalfSpace(x[2] <= -0.55, x)])
+    k3 = HPolyhedron([HalfSpace(0.05 <= x[1], x), HalfSpace(x[1] <= 0.20, x), HalfSpace(-0.95 <= x[2], x), HalfSpace(x[2] <= -0.80, x)])
+    k4 = HPolyhedron([HalfSpace(0.80 <= x[1], x), HalfSpace(x[1] <= 0.95, x), HalfSpace(-0.95 <= x[2], x), HalfSpace(x[2] <= -0.80, x)])
+    k5 = HPolyhedron([HalfSpace(0.30 <= x[1], x), HalfSpace(x[1] <= 0.45, x), HalfSpace(-0.45 <= x[2], x), HalfSpace(x[2] <= -0.30, x)])
 
     d1 = HPolyhedron([HalfSpace(0.23 <= x[1], x), HalfSpace(x[1] <= 0.27, x), HalfSpace(-1.00 <= x[2], x), HalfSpace(x[2] <= -0.77, x)])
     d2 = HPolyhedron([HalfSpace(0.73 <= x[1], x), HalfSpace(x[1] <= 0.77, x), HalfSpace(-0.52 <= x[2], x), HalfSpace(x[2] <= -0.27, x)])
@@ -48,7 +48,7 @@ O = [
     ["room"], ["room"], ["room"], ["room"], ["room"], ["room"], ["room"], ["room"],
 ]
 
-x0 = [0.55, -0.75, 0.0, 0.0]
+x0 = [0.6, -0.6, 0.0, 0.0]
 xT = [0.0, 0.0, 0.0, 0.0]
 
 s, q0, qT = PPWA(A, B, l, merge_modes=false, V=V, O=O)
@@ -62,28 +62,28 @@ policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
 uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
 scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
-plot!([0.52, 0.73, 0.73, 0.52, 0.52], [-1.00, -1.00, -0.77, -0.77, -1.00], color=:green, linestyle=:dash, label=false)
-plot!([0.27, 0.48, 0.48, 0.27, 0.27], [-0.77, -0.77, -0.52, -0.52, -0.77], color=:green, linestyle=:dash, label=false)
-plot!([0.00, 0.23, 0.23, 0.00, 0.00], [-1.00, -1.00, -0.77, -0.77, -1.00], color=:green, linestyle=:dash, label=false)
-plot!([0.77, 1.00, 1.00, 0.77, 0.77], [-1.00, -1.00, -0.77, -0.77, -1.00], color=:green, linestyle=:dash, label=false)
-plot!([0.27, 0.48, 0.48, 0.27, 0.27], [-0.48, -0.48, -0.27, -0.27, -0.48], color=:green, linestyle=:dash, label=false)
+plot!([0.55, 0.70, 0.70, 0.55, 0.55], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.30, 0.45, 0.45, 0.30, 0.30], [-0.70, -0.70, -0.55, -0.55, -0.70], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.05, 0.20, 0.20, 0.05, 0.05], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.80, 0.95, 0.95, 0.80, 0.80], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.30, 0.45, 0.45, 0.30, 0.30], [-0.45, -0.45, -0.30, -0.30, -0.45], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 # annotate!(0.7, -0.95, text("(1)", :green, :right))
 # annotate!(0.45, -0.7, text("(2)", :green, :right))
 # annotate!(0.2, -0.95, text("(3)", :green, :right))
 # annotate!(0.95, -0.95, text("(4)", :green, :right))
 # annotate!(0.45, -0.45, text("(5)", :green, :right))
 
-plot!([0.23, 0.27, 0.27, 0.23, 0.23], [-1.00, -1.00, -0.77, -0.77, -1.00], color=:red, linestyle=:dash, label=false)
-plot!([0.73, 0.77, 0.77, 0.73, 0.73], [-0.52, -0.52, -0.27, -0.27, -0.52], color=:red, linestyle=:dash, label=false)
-plot!([0.77, 1.00, 1.00, 0.77, 0.77], [-0.77, -0.77, -0.73, -0.73, -0.77], color=:red, linestyle=:dash, label=false)
-plot!([0.00, 0.23, 0.23, 0.00, 0.00], [-0.52, -0.52, -0.48, -0.48, -0.52], color=:red, linestyle=:dash, label=false)
-plot!([0.77, 1.00, 1.00, 0.77, 0.77], [-0.27, -0.27, -0.23, -0.23, -0.27], color=:red, linestyle=:dash, label=false)
+plot!([0.23, 0.27, 0.27, 0.23, 0.23], [-1.00, -1.00, -0.77, -0.77, -1.00], color=:red, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.73, 0.77, 0.77, 0.73, 0.73], [-0.52, -0.52, -0.27, -0.27, -0.52], color=:red, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.77, 1.00, 1.00, 0.77, 0.77], [-0.77, -0.77, -0.73, -0.73, -0.77], color=:red, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.00, 0.23, 0.23, 0.00, 0.00], [-0.52, -0.52, -0.48, -0.48, -0.52], color=:red, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
+plot!([0.77, 1.00, 1.00, 0.77, 0.77], [-0.27, -0.27, -0.23, -0.23, -0.27], color=:red, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 
-plot!([0.00, 0.77, 0.77, 0.00, 0.00], [-0.27, -0.27, -0.23, -0.23, -0.27], color=:black, fill=true, fillalpha=0.3, label=false)
-plot!([0.48, 0.52, 0.52, 0.48, 0.48], [-0.52, -0.52, -0.27, -0.27, -0.52], color=:black, fill=true, fillalpha=0.3, label=false)
-plot!([0.23, 0.48, 0.48, 0.23, 0.23], [-0.52, -0.52, -0.48, -0.48, -0.52], color=:black, fill=true, fillalpha=0.3, label=false)
-plot!([0.23, 0.27, 0.27, 0.23, 0.23], [-0.77, -0.77, -0.52, -0.52, -0.77], color=:black, fill=true, fillalpha=0.3, label=false)
-plot!([0.73, 0.77, 0.77, 0.73, 0.73], [-1.00, -1.00, -0.52, -0.52, -1.00], color=:black, fill=true, fillalpha=0.3, label=false)
+plot!([0.00, 0.77, 0.77, 0.00, 0.00], [-0.27, -0.27, -0.23, -0.23, -0.27], color=:black, fill=true, fillalpha=0.4, label=false)
+plot!([0.48, 0.52, 0.52, 0.48, 0.48], [-0.52, -0.52, -0.27, -0.27, -0.52], color=:black, fill=true, fillalpha=0.4, label=false)
+plot!([0.23, 0.48, 0.48, 0.23, 0.23], [-0.52, -0.52, -0.48, -0.48, -0.52], color=:black, fill=true, fillalpha=0.4, label=false)
+plot!([0.23, 0.27, 0.27, 0.23, 0.23], [-0.77, -0.77, -0.52, -0.52, -0.77], color=:black, fill=true, fillalpha=0.4, label=false)
+plot!([0.73, 0.77, 0.77, 0.73, 0.73], [-1.00, -1.00, -0.52, -0.52, -1.00], color=:black, fill=true, fillalpha=0.4, label=false)
 
 plot!([0.0, 1.0, 1.0, 0.0, 0.0], [-1.0, -1.0, 0.0, 0.0, -1.0], color=:black, label=false)
 
