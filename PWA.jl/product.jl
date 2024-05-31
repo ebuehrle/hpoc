@@ -46,9 +46,10 @@ function split_edge_disjunctions(E, L)
     remove_braces(x) = (x[1] == '(') ? x[2:end-1] : x
     split_conjunctions(x) = strip.(split(x, "&"))
     remove_negation(x) = x[2:end]
+    remove_1(x) = filter(l -> l != "1", x)
     group_by_signs(x) = (filter(l->!startswith(l,'!'),x), remove_negation.(filter(l->startswith(l,'!'),x)))
 
-    split_label(x) = group_by_signs.(split_conjunctions.(remove_braces.(split_disjunctions(x))))
+    split_label(x) = group_by_signs.(remove_1.(split_conjunctions.(remove_braces.(split_disjunctions(x)))))
     S = split_label.(L)
 
     T = [[e for _ in 1:length(s)] for (e,s) in zip(E,S)]
@@ -131,7 +132,7 @@ function merge_eq_modes(V, E, q0, qT)
     return V, E, q0, qT
 end
 
-function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Union{Formula, String}, translator = LTLTranslator(deterministic=true); merge_modes=true, remove_redundant=true, V::Vector=nothing, O::Vector{Vector{String}}=nothing)
+function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Union{Formula, String}, translator = LTLTranslator(deterministic=true); merge_modes=true, remove_redundant=true, V=nothing, O=nothing)
     
     if isnothing(V)
         l, d = translate(translator, f)
@@ -141,7 +142,7 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Union{Formula, String}, tra
         O1 = map(o -> let k = collect(keys(d)); satisfied = [issatisfied(d[x], o[1], o[2]) for x in k]; (k[satisfied], k[(!).(satisfied)]) end, O1)
         V1 = [v for (_,v) in Vp]
     else
-        @assert !isnothing(O)
+        @assert length(V) == length(O)
         l = Spot.translate(translator, Spot.SpotFormula(f))
         allO = reduce(vcat, O)
         O1 = map(o -> (o, setdiff(allO, o)), O)
