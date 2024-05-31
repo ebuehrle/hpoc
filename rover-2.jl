@@ -14,7 +14,7 @@ B1 = [0 0; 0 0; 1 0; 0 1]
 A = [A1 zeros(4,4); zeros(4,4) A1]
 B = [B1 zeros(4,2); zeros(4,2) B1]
 #l = "G(ra) & G((r1o1 | r1o2 | r1o3) -> F(r1t1)) & G((r2o1 | r2o2 | r2o3) -> F(r2t1)) & F(r1o1 | r2o1) & F(r1o2 | r2o2) & F(r1o3 | r2o3)"# & F(r1o4 | r2o4) & F(r1t1 | r2t1) & F(r1t2 | r2t2)
-l = "G(ra) & G((r1o1 | r1o2 | r1o3) -> F(r1t1)) & G((r2o1 | r2o2 | r2o3) -> F(r2t1)) & F(r1o1 | r2o1) & F(r1o2 | r2o2) & F(r1o3 | r2o3)"# & F(r1o4 | r2o4) & F(r1t1 | r2t1) & F(r1t2 | r2t2)
+l = "G(ra) & G((r1o1 | r1o2 | r1o3) -> F(r1t1)) & G((r2o1 | r2o2 | r2o3) -> F(r2t1)) & F(r1o1 | r2o1) & F(r1o2 | r2o2) & F(r1o3 | r2o3) & (!(r1o1 | r2o1 | r1o3 | r2o3) U (r1o2 | r2o2))"
 
 V = let x = Symbolics.variables(:x, 1:8)
     r1o1 = HPolyhedron([HalfSpace(-0.4 <= x[1], x), HalfSpace(x[1] <= -0.3, x), HalfSpace(-0.4 <= x[2], x), HalfSpace(x[2] <= -0.3, x)])
