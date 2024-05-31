@@ -19,7 +19,7 @@ end
 x0 = [-0.9, -0.9, 0.0, 0.0]
 xT = [0.0, 0.0, 0.0, 0.0]
 
-s, q0, qT = PPWA(A, B, l, merge_modes=false)
+s, q0, qT = PPWA(A, B, l, merge_modes=true)
 policy = MIQPPolicy(s, c, h=0.3, T=30, optimizer=Gurobi.Optimizer)
 uq, (xq, qq), mq = action(policy, (q0, x0), (qT, xT))
 
