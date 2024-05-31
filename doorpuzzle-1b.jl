@@ -10,7 +10,7 @@ using .PWA
 c(x,u) = x'*x + u'*u
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
-l = "G(room) & (!d5 U k5) & (!d4 U k4) & (!d3 U k3) & (!d2 U k2)"# & (!d1 U k1)"
+l = "G(room) & (!d5 U k5) & (!d4 U k4) & (!d3 U k3) & (!d2 U k2) & (!d1 U k1)"
 
 V = let x = Symbolics.variables(:x, 1:4)
     k1 = HPolyhedron([HalfSpace(0.52 <= x[1], x), HalfSpace(x[1] <= 0.73, x), HalfSpace(-1.00 <= x[2], x), HalfSpace(x[2] <= -0.77, x)])
