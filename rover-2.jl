@@ -56,8 +56,8 @@ O = [
     ["r2t1", "ra"], #["r2t2", "ra"],
     ["ra"],
 ]
-x0 = [-0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0]
-xT = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+x0 = [-0.1, 0.1, 0.0, 0.0, 0.1, -0.1, 0.0, 0.0]
+xT = [-0.1, 0.1, 0.0, 0.0, 0.1, -0.1, 0.0, 0.0]
 
 s, q0, qT = PPWA(A, B, l, LTLTranslator(deterministic=true, state_based_acceptance=true, buchi=true), V=V, O=O, merge_modes=false)
 println(HybridSystems.nmodes(s), " modes")
