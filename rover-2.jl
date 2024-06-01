@@ -7,6 +7,7 @@ using Ipopt
 using Plots; ENV["GKSwstype"] = "100"
 using .PWA
 using Spot
+using Interpolations
 
 c(x,u) = x[3:4]'*x[3:4] + x[7:8]'*x[7:8] + u'*u + 0.1
 A1 = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
@@ -65,10 +66,15 @@ println(q0)
 println(qT)
 
 policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
-uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
+uq, xq, qq, tq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
-scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
-scatter!(xq[:,5],xq[:,6],label=false)
+x1 = linear_interpolation(tq, xq[:,1])
+x2 = linear_interpolation(tq, xq[:,2])
+x5 = linear_interpolation(tq, xq[:,5])
+x6 = linear_interpolation(tq, xq[:,6])
+tt = tq[1]:0.02:tq[end]
+scatter(x1.(tt),x2.(tt),label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
+scatter!(x5.(tt),x6.(tt),label=false)
 
 plot!([-0.4, -0.3, -0.3, -0.4, -0.4], [-0.4, -0.4, -0.3, -0.3, -0.4], color=:green, linestyle=:dash, fill=true, fillalpha=0.2, label=false)
 plot!([ 0.3,  0.4,  0.4,  0.3,  0.3], [-0.4, -0.4, -0.3, -0.3, -0.4], color=:green, linestyle=:dash, fill=true, fillalpha=0.2, label=false)

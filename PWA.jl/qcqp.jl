@@ -47,10 +47,11 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
 
     optimize!(m)
 
-    xr = reshape(value.(x), (M*p.T,nx))
-    ur = reshape(value.(u), (M*p.T,nu))
-    qr = repeat(P, p.T)
+    xr = reshape(permutedims(value.(x), [2, 1, 3]), (M*p.T,nx))
+    ur = reshape(permutedims(value.(u), [2, 1, 3]), (M*p.T,nu))
+    qr = repeat(P, inner=p.T)
+    tr = cumsum(repeat(value.(h), inner=p.T)) .- value(h[1])
 
-    return ur, xr, qr, m
+    return ur, xr, qr, tr, m
 
 end

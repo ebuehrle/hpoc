@@ -6,6 +6,7 @@ using MosekTools
 using Ipopt
 using Plots; ENV["GKSwstype"] = "100"
 using .PWA
+using Interpolations
 
 c(x,u) = x'*x + u'*u
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
@@ -59,19 +60,17 @@ println(q0)
 println(qT)
 
 policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
-uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
+uq, xq, qq, tq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
-scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
+x1 = linear_interpolation(tq, xq[:,1])
+x2 = linear_interpolation(tq, xq[:,2])
+tt = tq[1]:0.02:tq[end]
+scatter(x1.(tt),x2.(tt),label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
 plot!([0.55, 0.70, 0.70, 0.55, 0.55], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.30, 0.45, 0.45, 0.30, 0.30], [-0.70, -0.70, -0.55, -0.55, -0.70], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.05, 0.20, 0.20, 0.05, 0.05], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.80, 0.95, 0.95, 0.80, 0.80], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.30, 0.45, 0.45, 0.30, 0.30], [-0.45, -0.45, -0.30, -0.30, -0.45], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
-# annotate!(0.7, -0.95, text("(1)", :green, :right))
-# annotate!(0.45, -0.7, text("(2)", :green, :right))
-# annotate!(0.2, -0.95, text("(3)", :green, :right))
-# annotate!(0.95, -0.95, text("(4)", :green, :right))
-# annotate!(0.45, -0.45, text("(5)", :green, :right))
 
 plot!([0.23, 0.27, 0.27, 0.23, 0.23], [-1.00, -1.00, -0.77, -0.77, -1.00], color=:red, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.73, 0.77, 0.77, 0.73, 0.73], [-0.52, -0.52, -0.27, -0.27, -0.52], color=:red, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
@@ -86,5 +85,17 @@ plot!([0.23, 0.27, 0.27, 0.23, 0.23], [-0.77, -0.77, -0.52, -0.52, -0.77], color
 plot!([0.73, 0.77, 0.77, 0.73, 0.73], [-1.00, -1.00, -0.52, -0.52, -1.00], color=:black, fill=true, fillalpha=0.4, label=false)
 
 plot!([0.0, 1.0, 1.0, 0.0, 0.0], [-1.0, -1.0, 0.0, 0.0, -1.0], color=:black, label=false)
+
+annotate!(0.69, -0.95, text("①", :right, :bottom, :green))
+annotate!(0.44, -0.70, text("②", :right, :bottom, :green))
+annotate!(0.19, -0.95, text("③", :right, :bottom, :green))
+annotate!(0.94, -0.95, text("④", :right, :bottom, :green))
+annotate!(0.44, -0.45, text("⑤", :right, :bottom, :green))
+
+annotate!(0.25, -1.00, text("①", :center, :bottom, :red))
+annotate!(0.75, -0.52, text("②", :center, :bottom, :red))
+annotate!(0.97, -0.75, text("③", :right, :center, :red))
+annotate!(0.20, -0.50, text("④", :right, :center, :red))
+annotate!(0.97, -0.25, text("⑤", :right, :center, :red))
 
 savefig("img/doorpuzzle-1b.pdf")

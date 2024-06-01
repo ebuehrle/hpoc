@@ -136,7 +136,7 @@ end
 function extract(p::GMPPolicy, (q0, x0)::Tuple{Vector{Int}, Vector}, (qT, xT)::Tuple{Vector{Int}, Vector}; T=20, optimizer=Ipopt.Optimizer)
 
     μ, E, K, m = action(p, (q0, x0), (qT, xT))
-    x, u, q, o = extract(p.s, p.c, μ, E, x0, xT, T=T, optimizer=optimizer)
-    return x, u, q, o, m
+    u, x, q, t, o = extract(p.s, p.c, μ, E, x0, xT, T=T, optimizer=optimizer)
+    return u, x, q, t, o, m
 
 end

@@ -6,6 +6,7 @@ using MosekTools
 using Ipopt
 using Plots
 using .PWA
+using Interpolations
 
 c(x,u) = x'*x + u'*u
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
@@ -22,14 +23,17 @@ xT = [0.0, 0.0, 0.0, 0.0]
 
 s, q0, qT = PPWA(A, B, l, merge_modes=false)
 policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
-uq, xq, qq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
+uq, xq, qq, tq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
 println(HybridSystems.nmodes(s), " modes")
 println(HybridSystems.ntransitions(s), " transitions")
 println(q0)
 println(qT)
 
-scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
+x1 = linear_interpolation(tq, xq[:,1])
+x2 = linear_interpolation(tq, xq[:,2])
+tt = tq[1]:0.02:tq[end]
+scatter(x1.(tt),x2.(tt),label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
 plot!([-0.9, -0.8, -0.8, -0.9, -0.9], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:yellow, fill=true, fillalpha=0.2, label=false)
 plot!([-0.6, -0.4, -0.4, -0.6, -0.6], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:blue, fill=true, fillalpha=0.2, label=false)
 plot!([-0.5, -0.2, -0.2, -0.5, -0.5], [-0.9, -0.9, -0.8, -0.8, -0.9], linestyle=:dash, color=:red, fill=true, fillalpha=0.2, label=false)
