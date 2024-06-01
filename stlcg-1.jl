@@ -32,7 +32,7 @@ println(qT)
 
 x1 = linear_interpolation(tq, xq[:,1])
 x2 = linear_interpolation(tq, xq[:,2])
-tt = tq[1]:0.02:tq[end]
+tt = tq[1]:0.04:tq[end]
 scatter(x1.(tt),x2.(tt),label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
 plot!([-0.9, -0.8, -0.8, -0.9, -0.9], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:yellow, fill=true, fillalpha=0.2, label=false)
 plot!([-0.6, -0.4, -0.4, -0.6, -0.6], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:blue, fill=true, fillalpha=0.2, label=false)

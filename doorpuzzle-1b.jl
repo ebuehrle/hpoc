@@ -8,7 +8,7 @@ using Plots; ENV["GKSwstype"] = "100"
 using .PWA
 using Interpolations
 
-c(x,u) = x'*x + u'*u
+c(x,u) = x[3:4]'*x[3:4] + u'*u + 0.1
 A = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B = [0 0; 0 0; 1 0; 0 1]
 l = "G(room) & (!d5 U k5) & (!d4 U k4) & (!d3 U k3) & (!d2 U k2) & (!d1 U k1)"
@@ -64,7 +64,7 @@ uq, xq, qq, tq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipop
 
 x1 = linear_interpolation(tq, xq[:,1])
 x2 = linear_interpolation(tq, xq[:,2])
-tt = tq[1]:0.02:tq[end]
+tt = tq[1]:0.04:tq[end]
 scatter(x1.(tt),x2.(tt),label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
 plot!([0.55, 0.70, 0.70, 0.55, 0.55], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.30, 0.45, 0.45, 0.30, 0.30], [-0.70, -0.70, -0.55, -0.55, -0.70], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
