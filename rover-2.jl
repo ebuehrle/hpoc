@@ -4,7 +4,7 @@ using HybridSystems
 using JuMP
 using MosekTools
 using Ipopt
-using Plots
+using Plots; ENV["GKSwstype"] = "100"
 using .PWA
 using Spot
 
