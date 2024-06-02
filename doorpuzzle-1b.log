@@ -1,0 +1,211 @@
+Running HiGHS 1.7.0 (git hash: 50670fd4c): Copyright (c) 2024 HiGHS under MIT licence terms
+Coefficient ranges:
+  Matrix [1e+00, 1e+00]
+  Cost   [1e-06, 1e+01]
+  Bound  [1e+00, 1e+00]
+  RHS    [1e+00, 1e+00]
+Presolving model
+368 rows, 634 cols, 1268 nonzeros  0s
+179 rows, 339 cols, 678 nonzeros  0s
+170 rows, 327 cols, 644 nonzeros  0s
+Presolve : Reductions: rows 170(-408); columns 327(-603); elements 644(-1216)
+Solving the presolved LP
+Using EKK dual simplex solver - serial
+  Iteration        Objective     Infeasibilities num(sum)
+          0     4.1313630527e-01 Pr: 2(2) 0s
+         38     2.9284617246e+00 Pr: 0(0) 0s
+Solving the original LP from the solution after postsolve
+Model   status      : Optimal
+Simplex   iterations: 38
+Objective value     :  2.9284617246e+00
+HiGHS run time      :          0.00
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+This is Ipopt version 3.14.14, running with linear solver MUMPS 5.6.2.
+
+Number of nonzeros in equality constraint Jacobian...:    12792
+Number of nonzeros in inequality constraint Jacobian.:     6400
+Number of nonzeros in Lagrangian Hessian.............:    15236
+
+Total number of variables............................:     5640
+                     variables with only lower bounds:       40
+                variables with lower and upper bounds:      800
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:     3204
+Total number of inequality constraints...............:     3200
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:     3200
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  8.1599763e-01 6.00e-01 1.00e+00  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  2.0280961e+01 5.65e-01 2.42e+01  -1.0 1.81e+01    -  6.79e-02 5.76e-02f  1
+   2  3.6771022e+01 3.80e-01 2.37e+02  -1.0 1.13e+01    -  7.35e-02 3.27e-01f  1
+   3  3.6161943e+01 3.19e-01 1.73e+02  -1.0 2.76e+00   0.0 8.15e-03 1.62e-01h  1
+   4  3.5568446e+01 2.81e-01 1.18e+02  -1.0 2.46e+00   0.4 1.61e-01 1.19e-01h  1
+   5  3.2386196e+01 1.16e-01 1.45e+02  -1.0 1.98e+00  -0.1 4.83e-01 5.88e-01h  1
+   6  3.2043470e+01 8.94e-02 1.16e+02  -1.0 5.84e-01   0.4 3.82e-01 2.29e-01h  1
+   7  3.1508614e+01 6.38e-02 7.72e+01  -1.0 6.75e-01  -0.1 8.17e-01 2.87e-01h  1
+   8  3.2604000e+01 3.95e-03 2.87e+01  -1.0 4.52e-01   0.3 1.00e+00 1.00e+00h  1
+   9  3.3709481e+01 1.52e-03 2.56e+01  -1.0 7.89e-02   0.7 9.27e-01 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  3.3903542e+01 5.02e-03 9.43e+00  -1.0 1.81e-01   0.3 1.00e+00 1.00e+00f  1
+  11  3.4156421e+01 9.58e-04 3.66e-01  -1.0 5.74e-02   0.7 1.00e+00 1.00e+00f  1
+  12  2.7467679e+01 1.76e-03 1.23e+00  -1.7 1.55e-01   0.2 9.93e-01 1.00e+00f  1
+  13  1.7616054e+01 4.55e-03 2.32e-01  -1.7 4.25e-01  -0.3 1.00e+00 1.00e+00f  1
+  14  1.5812254e+01 1.87e-02 1.02e+00  -1.7 9.30e-01  -0.7 9.72e-01 1.00e+00f  1
+  15  1.4706638e+01 7.22e-02 4.59e+00  -1.7 1.15e+00  -1.2 6.67e-01 9.35e-01f  1
+  16  1.4911019e+01 5.99e-02 2.83e+00  -1.7 6.42e-01  -1.7 3.92e-01 5.00e-01h  2
+  17  1.4279194e+01 9.11e-02 1.97e+00  -1.7 3.21e-01  -0.4 1.00e+00 1.00e+00h  1
+  18  1.5906782e+01 1.07e-01 1.22e+00  -1.7 4.16e-01  -0.8 9.80e-01 1.00e+00h  1
+  19  1.4965024e+01 1.75e-02 1.08e+00  -1.7 6.61e-01  -1.3 9.71e-01 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.4780689e+01 2.13e-02 8.74e-01  -1.7 2.25e-01  -1.8 1.00e+00 1.00e+00h  1
+  21  1.4917328e+01 3.02e-03 4.91e+00  -1.7 1.34e+00  -2.3 6.36e-01 1.00e+00h  1
+  22  1.4829356e+01 6.68e-03 3.41e+00  -1.7 5.05e+00  -1.8 2.15e-01 2.00e-01h  2
+  23  1.4832757e+01 5.93e-03 5.74e+00  -1.7 9.46e-01    -  1.00e+00 1.00e+00h  1
+  24  1.4848797e+01 1.85e-03 4.00e+00  -1.7 2.62e-01  -1.4 1.00e+00 7.09e-01h  1
+  25  1.4851834e+01 1.85e-03 2.13e+00  -1.7 4.88e+01    -  9.26e-03 2.63e-02f  5
+  26  1.4827525e+01 2.35e-03 4.34e+00  -1.7 2.07e+00  -1.9 4.52e-01 2.27e-01f  2
+  27  1.4830977e+01 1.40e-03 1.52e+00  -1.7 4.65e-01    -  7.68e-01 1.00e+00h  1
+  28  1.4852328e+01 9.58e-04 4.03e-01  -1.7 2.58e-01    -  1.00e+00 1.00e+00h  1
+  29  1.4848834e+01 6.32e-05 3.75e-02  -1.7 7.56e-02    -  1.00e+00 1.00e+00h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  30  9.0605029e+00 5.91e-03 1.20e+00  -2.5 2.20e-01    -  8.80e-01 1.00e+00f  1
+  31  7.7810283e+00 2.29e-03 4.27e-01  -2.5 1.25e-01    -  9.33e-01 6.31e-01h  1
+  32  6.8312426e+00 5.20e-04 2.10e-01  -2.5 6.00e-02    -  1.00e+00 1.00e+00h  1
+  33  6.8024042e+00 3.17e-05 3.55e-03  -2.5 1.39e-02    -  1.00e+00 1.00e+00h  1
+  34  5.3975302e+00 7.99e-04 2.86e-01  -3.8 6.40e-02    -  8.08e-01 1.00e+00f  1
+  35  5.0474166e+00 6.39e-04 1.42e-01  -3.8 5.17e-02    -  9.15e-01 6.33e-01h  1
+  36  4.9249753e+00 4.32e-04 4.56e-01  -3.8 4.25e-02    -  1.00e+00 4.98e-01h  1
+  37  4.8125638e+00 1.64e-04 3.66e-02  -3.8 2.85e-02    -  1.00e+00 1.00e+00f  1
+  38  4.8113974e+00 2.37e-06 9.59e-04  -3.8 3.95e-03    -  1.00e+00 1.00e+00h  1
+  39  4.7556470e+00 3.85e-05 1.94e-01  -5.7 2.83e-02    -  8.35e-01 5.17e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  40  4.7177587e+00 9.67e-05 3.90e-02  -5.7 3.16e-02    -  5.98e-01 7.07e-01h  1
+  41  4.7145529e+00 9.16e-05 8.02e-02  -5.7 5.31e-02    -  4.06e-01 1.74e-01h  1
+  42  4.7104696e+00 8.31e-05 1.55e-01  -5.7 2.91e-02    -  8.75e-01 2.73e-01h  1
+  43  4.7024819e+00 3.93e-05 4.39e-02  -5.7 1.25e-02    -  1.00e+00 7.95e-01h  1
+  44  4.7010525e+00 1.86e-05 5.43e-02  -5.7 6.16e-03    -  1.00e+00 6.34e-01f  1
+  45  4.7002390e+00 3.34e-06 1.30e-03  -5.7 3.31e-03    -  1.00e+00 1.00e+00f  1
+  46  4.7002063e+00 2.46e-08 4.60e-06  -5.7 3.47e-04    -  1.00e+00 1.00e+00h  1
+  47  4.6995351e+00 1.26e-06 3.65e-02  -8.6 3.37e-03    -  8.65e-01 6.56e-01h  1
+  48  4.6993728e+00 8.99e-07 6.34e-02  -8.6 1.72e-03    -  7.64e-01 3.87e-01h  1
+  49  4.6992230e+00 4.85e-07 3.70e-02  -8.6 1.07e-03    -  8.55e-01 5.88e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  50  4.6991951e+00 3.66e-07 6.42e-02  -8.6 2.61e-04    -  1.00e+00 2.47e-01h  1
+  51  4.6991333e+00 6.54e-08 1.51e-02  -8.6 1.96e-04    -  1.00e+00 8.22e-01f  1
+  52  4.6991227e+00 1.22e-08 1.44e-02  -8.6 7.05e-05    -  7.34e-01 8.14e-01f  1
+  53  4.6991211e+00 5.60e-09 3.58e-02  -8.6 2.92e-05    -  1.00e+00 5.39e-01f  1
+  54  4.6991195e+00 1.07e-10 2.94e-07  -8.6 2.04e-05    -  1.00e+00 1.00e+00f  1
+  55  4.6991194e+00 8.24e-13 2.06e-10  -8.6 1.79e-06    -  1.00e+00 1.00e+00h  1
+
+Number of Iterations....: 55
+
+                                   (scaled)                 (unscaled)
+Objective...............:   4.6991194029790613e+00    4.6991194029790613e+00
+Dual infeasibility......:   2.0575714011284232e-10    2.0575714011284232e-10
+Constraint violation....:   8.2449119824220055e-13    8.2449119824220055e-13
+Variable bound violation:   5.8805893638353953e-09    5.8805893638353953e-09
+Complementarity.........:   2.5167992989295977e-09    2.5167992989295977e-09
+Overall NLP error.......:   2.5167992989295977e-09    2.5167992989295977e-09
+
+
+Number of objective function evaluations             = 75
+Number of objective gradient evaluations             = 56
+Number of equality constraint evaluations            = 75
+Number of inequality constraint evaluations          = 75
+Number of equality constraint Jacobian evaluations   = 56
+Number of inequality constraint Jacobian evaluations = 56
+Number of Lagrangian Hessian evaluations             = 55
+Total seconds in IPOPT                               = 0.909
+
+EXIT: Optimal Solution Found.
+constructing product automaton vertices
+constructing product automaton edges
+removing redundant constraints
+576 modes
+928 transitions
+[2, 34, 66, 98, 130, 162, 194, 226, 258, 290, 322, 354, 386, 418, 450, 482, 514, 546]
+[1, 33, 65, 97, 129, 161, 193, 225, 257, 289, 321, 353, 385, 417, 449, 481, 513, 545]
+formulating GMP
+formulating SDP
+Problem
+  Name                   :                 
+  Objective sense        : minimize        
+  Type                   : CONIC (conic optimization problem)
+  Constraints            : 43154           
+  Affine conic cons.     : 2790 (78120 rows)
+  Disjunctive cons.      : 0               
+  Cones                  : 0               
+  Scalar variables       : 78120           
+  Matrix variables       : 0               
+  Integer variables      : 0               
+
+Optimizer started.
+Presolve started.
+Linear dependency checker started.
+Linear dependency checker terminated.
+Eliminator started.
+Freed constraints in eliminator : 31894
+Eliminator terminated.
+Eliminator started.
+Freed constraints in eliminator : 92
+Eliminator terminated.
+Eliminator - tries                  : 2                 time                   : 0.00            
+Lin. dep.  - tries                  : 1                 time                   : 0.02            
+Lin. dep.  - primal attempts        : 1                 successes              : 1               
+Lin. dep.  - dual attempts          : 0                 successes              : 0               
+Lin. dep.  - primal deps.           : 1                 dual deps.             : 0               
+Presolve terminated. Time: 0.11    
+Optimizer  - threads                : 8               
+Optimizer  - solved problem         : the primal      
+Optimizer  - Constraints            : 82379           
+Optimizer  - Cones                  : 1               
+Optimizer  - Scalar variables       : 51491             conic                  : 42281           
+Optimizer  - Semi-definite variables: 2790              scalarized             : 78120           
+Factor     - setup time             : 0.27            
+Factor     - dense det. time        : 0.00              GP order time          : 0.00            
+Factor     - nonzeros before factor : 1.40e+06          after factor           : 4.45e+06        
+Factor     - dense dim.             : 2                 flops                  : 4.99e+08        
+ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
+0   2.0e+00  1.0e+00  1.0e+00  0.00e+00   8.000000000e-02   8.000000000e-02   1.0e+00  0.43  
+1   1.8e+00  9.0e-01  8.6e-01  1.37e+00   -5.383786469e+00  -5.369174287e+00  9.0e-01  0.54  
+2   4.6e-01  2.3e-01  8.5e-02  1.25e+00   -6.125582844e+01  -6.131438551e+01  2.3e-01  0.65  
+3   2.4e-01  1.2e-01  2.7e-02  1.55e+00   -2.010962239e+01  -2.013819740e+01  1.2e-01  0.74  
+4   5.6e-02  2.8e-02  2.3e-03  1.50e+00   4.592543589e+00   4.585596661e+00   2.8e-02  0.85  
+5   1.6e-02  7.8e-03  2.9e-04  1.33e+00   4.161317620e+00   4.159544305e+00   7.8e-03  0.96  
+6   4.7e-03  2.4e-03  4.4e-05  1.23e+00   3.861743801e+00   3.861241128e+00   2.4e-03  1.07  
+7   1.7e-03  8.5e-04  9.3e-06  1.08e+00   3.873316519e+00   3.873137336e+00   8.5e-04  1.18  
+8   8.2e-04  4.1e-04  3.2e-06  1.02e+00   3.863305687e+00   3.863217574e+00   4.1e-04  1.27  
+9   2.4e-04  1.2e-04  5.0e-07  9.96e-01   3.847053333e+00   3.847027148e+00   1.2e-04  1.38  
+10  1.1e-04  5.4e-05  1.5e-07  9.63e-01   3.839256825e+00   3.839244701e+00   5.4e-05  1.49  
+11  5.2e-05  2.6e-05  5.1e-08  9.44e-01   3.834028496e+00   3.834022617e+00   2.6e-05  1.60  
+12  4.4e-05  2.2e-05  4.0e-08  9.25e-01   3.833200284e+00   3.833195247e+00   2.2e-05  1.68  
+13  1.1e-05  5.6e-06  5.6e-09  9.21e-01   3.828708361e+00   3.828707050e+00   5.6e-06  1.80  
+14  4.7e-06  2.4e-06  1.6e-09  8.65e-01   3.827054458e+00   3.827053892e+00   2.3e-06  1.88  
+15  2.3e-06  1.1e-06  5.9e-10  8.59e-01   3.826180139e+00   3.826179857e+00   1.1e-06  1.97  
+16  1.8e-06  9.2e-07  4.5e-10  7.68e-01   3.825958495e+00   3.825958262e+00   9.2e-07  2.05  
+17  9.7e-07  4.1e-07  1.5e-10  7.87e-01   3.825339701e+00   3.825339595e+00   4.1e-07  2.14  
+18  8.4e-07  1.6e-07  4.0e-11  7.91e-01   3.824874900e+00   3.824874860e+00   1.6e-07  2.23  
+19  6.1e-07  1.1e-07  2.5e-11  6.71e-01   3.824735235e+00   3.824735207e+00   1.1e-07  2.39  
+20  6.1e-07  1.1e-07  2.5e-11  6.71e-01   3.824735235e+00   3.824735207e+00   1.1e-07  2.65  
+21  6.1e-07  1.1e-07  2.5e-11  6.71e-01   3.824735235e+00   3.824735207e+00   1.1e-07  2.90  
+22  5.4e-07  8.9e-08  1.8e-11  9.34e-01   3.824639823e+00   3.824639801e+00   9.0e-08  2.98  
+23  4.8e-07  5.3e-08  8.3e-12  9.48e-01   3.824469186e+00   3.824469173e+00   5.5e-08  3.05  
+24  4.3e-07  4.0e-08  5.7e-12  6.53e-01   3.824404799e+00   3.824404789e+00   4.1e-08  3.21  
+25  4.3e-07  4.0e-08  5.7e-12  6.53e-01   3.824404799e+00   3.824404789e+00   4.1e-08  3.46  
+26  2.5e-07  2.2e-08  2.4e-12  1.00e+00   3.824281470e+00   3.824281465e+00   2.4e-08  3.62  
+27  2.2e-07  1.4e-08  1.2e-12  1.00e+00   3.824203470e+00   3.824203467e+00   1.6e-08  3.78  
+28  2.2e-07  1.4e-08  1.2e-12  1.00e+00   3.824203470e+00   3.824203467e+00   1.6e-08  4.03  
+29  2.1e-07  1.4e-08  1.2e-12  1.00e+00   3.824202541e+00   3.824202538e+00   1.6e-08  4.25  
+30  2.1e-07  1.4e-08  1.2e-12  1.00e+00   3.824202425e+00   3.824202422e+00   1.6e-08  4.47  
+31  2.1e-07  1.4e-08  1.2e-12  1.00e+00   3.824202396e+00   3.824202393e+00   1.6e-08  4.71  
+32  2.1e-07  1.4e-08  1.2e-12  1.00e+00   3.824202381e+00   3.824202378e+00   1.6e-08  4.95  
+Optimizer terminated. Time: 5.25    
+
