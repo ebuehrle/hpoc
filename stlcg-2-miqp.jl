@@ -3,7 +3,7 @@ using Symbolics, LazySets
 using HybridSystems
 using JuMP
 using Gurobi
-using Plots
+using Plots; ENV["GKSwstype"] = "100"
 using .PWA
 
 c(x,u) = x'*x + u'*u
@@ -28,7 +28,7 @@ println(HybridSystems.ntransitions(s), " transitions")
 println(q0)
 println(qT)
 
-scatter(xq[:,1],xq[:,2],label="J = $(round(objective_value(mq), digits=2))")
+scatter(xq[:,1],xq[:,2],label=false)
 plot!([-0.9, -0.8, -0.8, -0.9, -0.9], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:yellow, fill=true, fillalpha=0.2, label=false)
 plot!([-0.6, -0.4, -0.4, -0.6, -0.6], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:blue, fill=true, fillalpha=0.2, label=false)
 plot!([-0.5, -0.2, -0.2, -0.5, -0.5], [-0.9, -0.9, -0.8, -0.8, -0.9], linestyle=:dash, color=:red, fill=true, fillalpha=0.2, label=false)

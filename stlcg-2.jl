@@ -4,7 +4,7 @@ using HybridSystems
 using JuMP
 using MosekTools
 using Ipopt
-using Plots
+using Plots; ENV["GKSwstype"] = "100"
 using .PWA
 using Interpolations
 
@@ -33,7 +33,7 @@ println(qT)
 x1 = linear_interpolation(tq, xq[:,1])
 x2 = linear_interpolation(tq, xq[:,2])
 tt = tq[1]:0.04:tq[end]
-scatter(x1.(tt),x2.(tt),label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))")
+scatter(x1.(tt),x2.(tt),label=false)
 plot!([-0.9, -0.8, -0.8, -0.9, -0.9], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:yellow, fill=true, fillalpha=0.2, label=false)
 plot!([-0.6, -0.4, -0.4, -0.6, -0.6], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:blue, fill=true, fillalpha=0.2, label=false)
 plot!([-0.5, -0.2, -0.2, -0.5, -0.5], [-0.9, -0.9, -0.8, -0.8, -0.9], linestyle=:dash, color=:red, fill=true, fillalpha=0.2, label=false)
