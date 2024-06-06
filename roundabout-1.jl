@@ -31,7 +31,7 @@ s2 = [
 ]
 o2 = ["v2l1", "v2l2", "v2l3", "v2l4", "v2l5"]
 
-c(x,u) = x[3:4]'*x[3:4] + x[7:8]'*x[7:8] + 10*u[1:2]'*u[1:2] + 100*u[3:4]'*u[3:4] + 0.1
+c(x,u) = x[3:4]'*x[3:4] + x[7:8]'*x[7:8] + 100*u'*u + 0.1
 A1 = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B1 = [0 0; 0 0; 1 0; 0 1]
 A = [A1 zeros(4,4); zeros(4,4) A1]
@@ -64,6 +64,6 @@ tt = tq[1]:5.0:tq[end]
 plot_all(lanelets, alpha=0.2, label=false)
 plot_all!(s1, linecolor=:red, fillcolor=nothing, fillalpha=0, label=false)
 plot_all!(s2, linecolor=:red, fillcolor=nothing, fillalpha=0, label=false)
-scatter!(x1.(tt),x2.(tt),label="J = $(round(objective_value(mq), digits=2)) ($(round(objective_value(m), digits=2)))",legend=:topright)
+scatter!(x1.(tt),x2.(tt),label=false)
 scatter!(x5.(tt),x6.(tt),label=false)
-savefig("img/roundabout2.pdf")
+savefig("img/roundabout-1.pdf")

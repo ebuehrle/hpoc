@@ -1,0 +1,196 @@
+Running HiGHS 1.7.0 (git hash: 50670fd4c): Copyright (c) 2024 HiGHS under MIT licence terms
+Coefficient ranges:
+  Matrix [1e+00, 1e+00]
+  Cost   [1e-06, 1e+01]
+  Bound  [1e+00, 1e+00]
+  RHS    [1e+00, 1e+00]
+Presolving model
+8 rows, 16 cols, 32 nonzeros  0s
+7 rows, 16 cols, 28 nonzeros  0s
+Presolve : Reductions: rows 7(-4); columns 16(-6); elements 28(-16)
+Solving the presolved LP
+Using EKK dual simplex solver - serial
+  Iteration        Objective     Infeasibilities num(sum)
+          0     2.0000010001e-06 Pr: 1(1) 0s
+          6     1.2384430568e+00 Pr: 0(0) 0s
+Solving the original LP from the solution after postsolve
+Model   status      : Optimal
+Simplex   iterations: 6
+Objective value     :  1.2384430568e+00
+HiGHS run time      :          0.00
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+This is Ipopt version 3.14.14, running with linear solver MUMPS 5.6.2.
+
+Number of nonzeros in equality constraint Jacobian...:     3184
+Number of nonzeros in inequality constraint Jacobian.:     2060
+Number of nonzeros in Lagrangian Hessian.............:     5297
+
+Total number of variables............................:     1305
+                     variables with only lower bounds:        5
+                variables with lower and upper bounds:      100
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      808
+Total number of inequality constraints...............:      800
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:      800
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  7.4536014e+00 1.00e+02 1.00e+00  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  7.7074521e+00 9.88e+01 3.03e+00  -1.0 1.00e+02    -  3.68e-03 1.17e-02f  1
+   2  7.8590909e+00 9.88e+01 3.02e+00  -1.0 9.88e+01    -  1.80e-03 8.34e-04h  1
+   3  8.3484291e+00 9.85e+01 4.12e+00  -1.0 9.88e+01    -  3.40e-03 2.56e-03f  1
+   4  9.9385645e+00 9.78e+01 3.00e+00  -1.0 9.85e+01    -  4.54e-03 7.21e-03f  1
+   5  1.0411809e+01 9.76e+01 1.79e+01  -1.0 9.78e+01    -  9.54e-03 2.01e-03h  1
+   6  1.2538489e+01 9.67e+01 1.63e+01  -1.0 9.76e+01    -  4.86e-03 8.77e-03h  1
+   7  1.3424251e+01 9.64e+01 1.67e+01  -1.0 9.67e+01    -  3.66e-03 3.92e-03h  1
+   8  1.9764512e+01 9.44e+01 1.43e+01  -1.0 9.64e+01    -  2.54e-02 2.03e-02h  1
+   9  2.7728586e+01 9.22e+01 1.45e+01  -1.0 9.44e+01    -  1.73e-02 2.36e-02h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  5.1300718e+01 8.54e+01 1.07e+01  -1.0 9.22e+01    -  5.58e-02 7.31e-02h  1
+  11  6.0202680e+01 8.40e+01 1.14e+01  -1.0 1.66e+02    -  3.82e-02 1.64e-02h  1
+  12  1.2831130e+02 6.17e+01 1.44e+01  -1.0 8.40e+01    -  1.16e-01 2.66e-01h  1
+  13  2.6760461e+02 3.27e+00 4.33e+01  -1.0 6.17e+01    -  1.27e-01 9.97e-01h  1
+  14  2.2820466e+02 1.11e+00 3.70e+01  -1.0 9.29e+00    -  2.21e-01 8.59e-01f  1
+  15  2.1238883e+02 2.24e-01 3.52e+01  -1.0 4.49e+00    -  1.06e-01 8.14e-01f  1
+  16  1.8116199e+02 1.31e+00 3.12e+01  -1.0 1.30e+01    -  1.82e-01 1.00e+00f  1
+  17  1.8107285e+02 3.16e-02 1.38e+01  -1.0 7.16e-01   0.0 5.25e-01 1.00e+00f  1
+  18  1.7180359e+02 2.51e-01 1.08e+01  -1.0 2.71e+01    -  1.98e-01 1.47e-01f  1
+  19  1.3536964e+02 3.02e+00 1.05e+01  -1.0 2.39e+01    -  1.54e-01 4.94e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.1532373e+02 6.89e-01 2.96e+01  -1.0 1.39e+01    -  2.75e-01 1.00e+00f  1
+  21  1.0616234e+02 5.78e-01 1.08e+01  -1.0 1.96e+01    -  3.58e-01 1.00e+00f  1
+  22  1.0251764e+02 2.11e-01 3.65e+00  -1.0 1.31e+01    -  6.08e-01 1.00e+00f  1
+  23  1.0425584e+02 5.05e-02 2.37e-01  -1.0 5.92e+00    -  1.00e+00 1.00e+00f  1
+  24  1.0140583e+02 4.65e-02 2.49e-01  -1.7 4.83e+00    -  9.90e-01 1.00e+00f  1
+  25  9.9660359e+01 1.16e-02 2.48e-02  -1.7 1.97e+00    -  1.00e+00 1.00e+00h  1
+  26  9.8532851e+01 8.26e-03 1.40e-01  -3.8 1.85e+00    -  7.67e-01 7.99e-01f  1
+  27  9.7976325e+01 3.00e-04 4.02e-01  -3.8 5.25e-01    -  7.50e-01 9.87e-01f  1
+  28  9.7886964e+01 9.39e-05 8.76e-01  -3.8 2.59e-01    -  2.11e-01 8.65e-01h  1
+  29  9.7859744e+01 2.66e-06 1.02e-04  -3.8 1.67e-01    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  30  9.7832620e+01 2.73e-06 4.69e-02  -5.7 2.71e-01    -  8.77e-01 9.83e-01f  1
+  31  9.7828550e+01 7.70e-07 4.64e-02  -5.7 8.74e-02    -  1.00e+00 7.85e-01h  1
+  32  9.7826884e+01 8.49e-08 1.50e-02  -5.7 2.41e-02    -  1.00e+00 9.14e-01f  1
+  33  9.7826588e+01 3.70e-10 4.65e-03  -5.7 2.46e-03    -  9.15e-01 1.00e+00f  1
+  34  9.7826497e+01 1.07e-10 4.31e-07  -5.7 1.45e-03    -  1.00e+00 1.00e+00h  1
+  35  9.7826420e+01 7.14e-11 1.28e-01  -8.6 1.50e-03    -  9.99e-01 4.76e-01f  1
+  36  9.7826352e+01 8.80e-11 3.45e-02  -8.6 5.38e-04    -  1.00e+00 8.96e-01f  1
+  37  9.7826341e+01 2.47e-12 6.05e-04  -8.6 5.61e-05    -  1.00e+00 9.84e-01f  1
+  38  9.7826340e+01 1.20e-14 6.92e-12  -8.6 4.53e-06    -  1.00e+00 1.00e+00f  1
+  39  9.7826339e+01 1.37e-14 5.94e-12  -9.0 2.28e-06    -  1.00e+00 1.00e+00h  1
+
+Number of Iterations....: 39
+
+                                   (scaled)                 (unscaled)
+Objective...............:   9.7826339100948104e+01    9.7826339100948104e+01
+Dual infeasibility......:   5.9392490925347374e-12    5.9392490925347374e-12
+Constraint violation....:   1.3655743202889425e-14    1.3655743202889425e-14
+Variable bound violation:   8.7593688750763196e-09    8.7593688750763196e-09
+Complementarity.........:   4.4284752913638069e-09    4.4284752913638069e-09
+Overall NLP error.......:   4.4284752913638069e-09    4.4284752913638069e-09
+
+
+Number of objective function evaluations             = 40
+Number of objective gradient evaluations             = 40
+Number of equality constraint evaluations            = 40
+Number of inequality constraint evaluations          = 40
+Number of equality constraint Jacobian evaluations   = 40
+Number of inequality constraint Jacobian evaluations = 40
+Number of Lagrangian Hessian evaluations             = 39
+Total seconds in IPOPT                               = 0.598
+
+EXIT: Optimal Solution Found.
+constructing product automaton vertices
+constructing product automaton edges
+removing redundant constraints
+removing redundant constraints
+9 modes
+20 transitions
+formulating GMP
+formulating SDP
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2042) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2058) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2070) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2098) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2110) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2114) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2130) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2142) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2146) of matrix 'A'.
+MOSEK warning 705 (MSK_RES_WRN_ZEROS_IN_SPARSE_ROW): 1 (nearly) zero elements are specified in sparse row ''(2150) of matrix 'A'.
+Warning number 705 is disabled.
+Problem
+  Name                   :                 
+  Objective sense        : minimize        
+  Type                   : CONIC (conic optimization problem)
+  Constraints            : 2563            
+  Affine conic cons.     : 66 (6006 rows)
+  Disjunctive cons.      : 0               
+  Cones                  : 0               
+  Scalar variables       : 6006            
+  Matrix variables       : 0               
+  Integer variables      : 0               
+
+Optimizer started.
+Presolve started.
+Eliminator started.
+Freed constraints in eliminator : 1998
+Eliminator terminated.
+Linear dependency checker started.
+Linear dependency checker terminated.
+Eliminator started.
+Freed constraints in eliminator : 0
+Eliminator terminated.
+Eliminator - tries                  : 2                 time                   : 0.00            
+Lin. dep.  - tries                  : 1                 time                   : 0.00            
+Lin. dep.  - primal attempts        : 1                 successes              : 1               
+Lin. dep.  - dual attempts          : 0                 successes              : 0               
+Lin. dep.  - primal deps.           : 1                 dual deps.             : 0               
+Presolve terminated. Time: 0.01    
+GP based matrix reordering started.
+GP based matrix reordering terminated.
+Optimizer  - threads                : 8               
+Optimizer  - solved problem         : the primal      
+Optimizer  - Constraints            : 6280            
+Optimizer  - Cones                  : 1               
+Optimizer  - Scalar variables       : 4291              conic                  : 3763            
+Optimizer  - Semi-definite variables: 66                scalarized             : 6006            
+Factor     - setup time             : 0.16            
+Factor     - dense det. time        : 0.06              GP order time          : 0.05            
+Factor     - nonzeros before factor : 2.97e+05          after factor           : 9.58e+05        
+Factor     - dense dim.             : 2                 flops                  : 2.10e+08        
+Factor     - GP saved nzs           : 8.76e+04          GP saved flops         : 5.48e+07        
+ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
+0   1.4e+04  1.0e+02  1.0e+00  0.00e+00   4.000000000e-02   4.000000000e-02   1.0e+00  0.17  
+1   9.5e+03  6.7e+01  8.2e-01  -1.00e+00  3.070108158e+03   3.070597225e+03   6.7e-01  0.19  
+2   2.1e+03  1.5e+01  3.9e-01  -1.00e+00  5.600611933e+04   5.601169079e+04   1.5e-01  0.20  
+3   1.3e+03  9.5e+00  3.1e-01  -9.95e-01  6.772585309e+04   6.773513348e+04   9.5e-02  0.21  
+4   2.3e+02  1.6e+00  1.2e-01  -9.80e-01  7.210687210e+04   7.216135072e+04   1.6e-02  0.22  
+5   2.0e+02  1.4e+00  1.1e-01  -8.50e-01  7.005283634e+04   7.011486873e+04   1.4e-02  0.23  
+6   5.1e+01  3.6e-01  4.6e-02  -8.16e-01  7.527327053e+04   7.543338032e+04   3.6e-03  0.24  
+7   1.5e+01  1.0e-01  1.5e-02  -4.24e-01  5.246016751e+04   5.265683611e+04   1.0e-03  0.26  
+8   4.2e+00  3.0e-02  2.9e-03  1.79e-01   2.388430143e+04   2.397852657e+04   3.0e-04  0.27  
+9   1.1e+00  7.6e-03  3.9e-04  7.32e-01   8.946645924e+03   8.972839099e+03   7.6e-05  0.28  
+10  2.3e-01  1.6e-03  4.7e-05  8.44e-01   3.288780527e+03   3.296985316e+03   1.6e-05  0.29  
+11  5.2e-02  3.7e-04  6.1e-06  7.37e-01   1.341487690e+03   1.344218194e+03   3.7e-06  0.30  
+12  1.3e-02  9.3e-05  9.9e-07  6.35e-01   6.295654308e+02   6.306877811e+02   9.3e-07  0.32  
+13  3.5e-03  2.5e-05  1.7e-07  6.60e-01   3.507669449e+02   3.512712560e+02   2.5e-07  0.33  
+14  8.8e-04  6.2e-06  3.0e-08  5.41e-01   2.084989001e+02   2.087275968e+02   6.2e-08  0.34  
+15  2.2e-04  1.5e-06  5.0e-09  5.66e-01   1.428185541e+02   1.429224700e+02   1.5e-08  0.35  
+16  5.3e-05  3.8e-07  7.8e-10  5.38e-01   1.106971735e+02   1.107398041e+02   3.8e-09  0.36  
+17  1.0e-05  7.2e-08  7.8e-11  6.95e-01   9.848756399e+01   9.849920600e+01   7.1e-10  0.37  
+18  2.4e-06  1.7e-08  8.5e-12  9.27e-01   9.570250212e+01   9.570507726e+01   1.6e-10  0.39  
+19  7.4e-07  5.3e-09  1.5e-12  9.91e-01   9.479884409e+01   9.479960199e+01   5.0e-11  0.40  
+20  5.9e-07  3.7e-09  8.4e-13  1.02e+00   9.457966668e+01   9.458020453e+01   3.6e-11  0.41  
+21  3.4e-07  1.5e-09  2.3e-13  1.00e+00   9.431138898e+01   9.431161107e+01   1.4e-11  0.43  
+22  3.4e-07  1.5e-09  2.3e-13  1.00e+00   9.431138898e+01   9.431161107e+01   1.4e-11  0.45  
+23  3.4e-07  1.5e-09  2.3e-13  1.00e+00   9.431138898e+01   9.431161107e+01   1.4e-11  0.46  
+Optimizer terminated. Time: 0.49    
+
