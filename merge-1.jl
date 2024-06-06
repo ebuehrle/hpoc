@@ -14,15 +14,15 @@ include("interaction.jl/maps.jl")
 lanelet_map = planelets("interaction-dataset/", scenario="DR_DEU_Merging_MT")
 lanelets = [translate(l.region, [-900., -1007.]) for l in lanelet_map]
 s1 = [
-    HPolyhedron(polyhedron(convexhull([100, -2], [100, 1.5], [75, 0], [75, 2]))),
-    HPolyhedron(polyhedron(convexhull([75, 0], [75, 2], [40, -1], [40, -3]))),
-    HPolyhedron(polyhedron(convexhull([40, -1], [40, -3], [0, -1], [0, 1.5]))),
+    HPolyhedron(polyhedron(convexhull([100, -2], [100, 1.5], [75, 1.5], [75, 3]))),
+    HPolyhedron(polyhedron(convexhull([75, 1.5], [75, 3], [40, -2], [40, -3]))),
+    HPolyhedron(polyhedron(convexhull([40, -2], [40, -3], [0, -1], [0, 1.5]))),
 ]
 o1 = ["v1l1", "v1l2", "v1l3"]
 s2 = [
-    HPolyhedron(polyhedron(convexhull([100, -4], [100, -2], [75, -3], [75, 0]))),
-    HPolyhedron(polyhedron(convexhull([75, -3], [75, 0], [40, -1], [40, -3]))),
-    HPolyhedron(polyhedron(convexhull([40, -1], [40, -3], [0, -1], [0, 1.5]))),
+    HPolyhedron(polyhedron(convexhull([100, -4], [100, -2], [75, -1], [75, 0]))),
+    HPolyhedron(polyhedron(convexhull([75, -1], [75, 0], [40, -2], [40, -3]))),
+    HPolyhedron(polyhedron(convexhull([40, -2], [40, -3], [0, -1], [0, 1.5]))),
 ]
 o2 = ["v2l1", "v2l2", "v2l3"]
 
@@ -41,7 +41,7 @@ O = [[h1, h2] for h1 in o1 for h2 in o2]
 l = "G(v1l1 | v1l2 | v1l3) & G(v2l1 | v2l2 | v2l3) & G!(v1l2 & v2l2)"
 
 x0 = [100, 0, 0.0, 0.0, 100, -3, 0, 0]
-xT = [0, 0, 0, 0, 0, 0, 0, 0]
+xT = [0, 0, -1, 0, 0, 0, -1, 0]
 
 s, q0, qT = PPWA(A, B, l, V=V, O=O, merge_modes=false)
 println(HybridSystems.nmodes(s), " modes")
@@ -54,7 +54,7 @@ x1 = linear_interpolation(tq, xq[:,1])
 x2 = linear_interpolation(tq, xq[:,2])
 x5 = linear_interpolation(tq, xq[:,5])
 x6 = linear_interpolation(tq, xq[:,6])
-tt = tq[1]:5.0:tq[end]
+tt = tq[1]:2:tq[end]
 
 plot_all(lanelets, alpha=0.2, label=false, ratio=:equal)
 plot_all!(s1, linecolor=:red, fillcolor=nothing, fillalpha=0, label=false)
