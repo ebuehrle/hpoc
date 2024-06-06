@@ -14,7 +14,7 @@ include("interaction.jl/maps.jl")
 lanelet_map = planelets("interaction-dataset/", scenario="DR_DEU_Roundabout_OF")
 lanelets = [translate(l.region, [-1000., -1000.]) for l in lanelet_map]
 s1 = [
-    HPolyhedron(polyhedron(convexhull([-25, 10], [-25, 15], [-20, 8], [-18, 11]))),
+    HPolyhedron(polyhedron(convexhull([-40, 18], [-40, 22], [-20, 8], [-18, 11]))),
     HPolyhedron(polyhedron(convexhull([-20, 8], [-18, 11], [-16, 1], [-10, 2]))),
     HPolyhedron(polyhedron(convexhull([-16, 1], [-10, 2], [-9, -10], [-6, -5]))),
     HPolyhedron(polyhedron(convexhull([-9, -10], [-6, -5], [5, -5], [10, -10]))),
@@ -31,7 +31,7 @@ s2 = [
 ]
 o2 = ["v2l1", "v2l2", "v2l3", "v2l4", "v2l5"]
 
-c(x,u) = x[3:4]'*x[3:4] + x[7:8]'*x[7:8] + 100*u'*u + 0.1
+c(x,u) = x[3:4]'*x[3:4] + x[7:8]'*x[7:8] + 10*u[1:2]'*u[1:2] + 100*u[3:4]'*u[3:4] + 0.1
 A1 = [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0]
 B1 = [0 0; 0 0; 1 0; 0 1]
 A = [A1 zeros(4,4); zeros(4,4) A1]
@@ -45,7 +45,7 @@ end
 O = [[h1, h2] for h1 in o1 for h2 in o2]
 l = "G(v1l1 | v1l2 | v1l3 | v1l4 | v1l5 | v1l6) & G(v2l1 | v2l2 | v2l3 | v2l4 | v2l5) & G!(v1l2 & v2l2)"
 
-x0 = [-25, 12.5, 0.0, 0.0, -2, 14, 0, 0]
+x0 = [-40, 20, 0.0, 0.0, -2, 14, 0, 0]
 xT = [40, -7.5, 0.0, 0.0, 6, -40, 0, 0]
 
 s, q0, qT = PPWA(A, B, l, V=V, O=O, merge_modes=false)
