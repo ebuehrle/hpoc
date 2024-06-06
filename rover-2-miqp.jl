@@ -66,8 +66,8 @@ println(qT)
 policy = MIQPPolicy(s, c, h=0.3, T=30, optimizer=Gurobi.Optimizer)
 uq, (xq, qq), mq = action(policy, (q0, x0), (qT, xT))
 
-scatter(xq[:,1],xq[:,2],label=false)
-scatter!(xq[:,5],xq[:,6],label=false)
+scatter(xq[:,1],xq[:,2],label=false,markersize=2)
+scatter!(xq[:,5],xq[:,6],label=false,markersize=2)
 
 plot!([-0.4, -0.3, -0.3, -0.4, -0.4], [-0.4, -0.4, -0.3, -0.3, -0.4], color=:green, linestyle=:dash, fill=true, fillalpha=0.2, label=false)
 plot!([ 0.3,  0.4,  0.4,  0.3,  0.3], [-0.4, -0.4, -0.3, -0.3, -0.4], color=:green, linestyle=:dash, fill=true, fillalpha=0.2, label=false)

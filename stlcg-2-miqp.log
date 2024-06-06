@@ -5,79 +5,69 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: AMD Ryzen 7 5800X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
 Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
 
-Optimize a model with 1208 rows, 1200 columns and 6896 nonzeros
-Model fingerprint: 0x9e3c94d4
+Optimize a model with 1115 rows, 1110 columns and 6104 nonzeros
+Model fingerprint: 0x3f1fbb8e
 Model has 180 quadratic objective terms
-Model has 3390 general constraints
-Variable types: 180 continuous, 1020 integer (1020 binary)
+Model has 3060 general constraints
+Variable types: 180 continuous, 930 integer (930 binary)
 Coefficient statistics:
   Matrix range     [3e-01, 1e+00]
   Objective range  [0e+00, 0e+00]
   QObjective range [6e-01, 6e-01]
   Bounds range     [0e+00, 0e+00]
   RHS range        [9e-01, 1e+00]
-  GenCon rhs range [5e-02, 3e+00]
-  GenCon coe range [1e-16, 5e+00]
+  GenCon rhs range [7e-02, 9e+00]
+  GenCon coe range [7e-17, 1e+01]
 Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
-Presolve added 1670 rows and 1716 columns
-Presolve time: 0.03s
-Presolved: 2878 rows, 2916 columns, 8778 nonzeros
-Presolved model has 2064 SOS constraint(s)
+Presolve added 1181 rows and 1226 columns
+Presolve time: 0.04s
+Presolved: 2296 rows, 2336 columns, 6861 nonzeros
+Presolved model has 1574 SOS constraint(s)
 Presolved model has 168 quadratic objective terms
-Variable types: 2252 continuous, 664 integer (664 binary)
-Found heuristic solution: objective 21.6193202
-Found heuristic solution: objective 6.9641865
+Variable types: 1811 continuous, 525 integer (525 binary)
+Found heuristic solution: objective 52.7335279
+Found heuristic solution: objective 16.1987301
+Found heuristic solution: objective 11.5568141
 
-Root relaxation: objective 3.323499e+00, 2301 iterations, 0.01 seconds (0.01 work units)
+Root relaxation: objective 3.323499e+00, 1848 iterations, 0.01 seconds (0.01 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0    3.32350    0   16    6.96419    3.32350  52.3%     -    0s
-     0     0    3.32350    0   16    6.96419    3.32350  52.3%     -    0s
-     0     2    3.32350    0   16    6.96419    3.32350  52.3%     -    0s
-*   18     6               4       6.8481788    3.32350  51.5%  90.1    0s
-H   29     5                       4.3276347    3.32350  23.2%  62.2    0s
-*   42     3               8       4.3264669    3.32350  23.2%  52.1    0s
-H   61     8                       4.0559562    3.32350  18.1%  40.0    0s
-*   62     8              12       4.0559543    3.32350  18.1%  39.4    0s
-H   66     8                       3.9582274    3.32350  16.0%  37.4    0s
-*   85     1              17       3.9582217    3.32350  16.0%  31.0    0s
-*   86     1              17       3.9582197    3.32350  16.0%  30.7    0s
-*  469    98              70       3.9428257    3.32350  15.7%  42.6    0s
-*  472    98              69       3.8755030    3.32350  14.2%  42.4    0s
-H  658   146                       3.8171364    3.32350  12.9%  36.0    0s
-H  724   160                       3.8171139    3.32350  12.9%  35.1    0s
-H  788   178                       3.8151135    3.32350  12.9%  34.6    0s
-*  789   178              90       3.8151091    3.32350  12.9%  34.6    0s
-H  918   235                       3.8100543    3.32350  12.8%  32.6    0s
-H 1270   273                       3.7749860    3.32350  12.0%  28.5    0s
-* 1451   307             100       3.7744413    3.32350  11.9%  26.7    0s
-* 1518   307             108       3.6820099    3.32350  9.74%  26.0    0s
-* 1519   307             107       3.6406943    3.32350  8.71%  26.0    0s
-* 1863    99             113       3.6397010    3.61841  0.59%  22.1    0s
-* 1927    51             122       3.6396145    3.63530  0.12%  21.5    0s
-* 1928    51             124       3.6395682    3.63530  0.12%  21.4    0s
-* 2018    12             134       3.6395677    3.63950  0.00%  20.6    0s
+     0     0    3.32350    0   29   11.55681    3.32350  71.2%     -    0s
+     0     0    3.32350    0   29   11.55681    3.32350  71.2%     -    0s
+     0     2    3.32350    0   29   11.55681    3.32350  71.2%     -    0s
+H  304   222                      10.5962212    3.32350  68.6%   101    0s
+H  378   257                       6.8331197    3.32350  51.4%   101    0s
+H  457   273                       6.5873933    3.32350  49.5%  94.2    0s
+H  458   273                       5.4816979    3.32350  39.4%  94.2    0s
+H  551   293                       5.1634865    3.32350  35.6%  89.2    0s
+H  620   312                       4.9534438    3.32350  32.9%  83.9    0s
+H  640   312                       4.9162123    3.32350  32.4%  82.6    0s
+H  744   311                       4.3583951    3.32350  23.7%  74.5    0s
+H 1010   220                       4.0516440    3.32350  18.0%  58.3    0s
+H 1758   217                       3.9717064    3.32350  16.3%  39.0    0s
+H 1765   217                       3.6395677    3.32350  8.68%  38.9    0s
 
 Cutting planes:
-  Implied bound: 247
+  Implied bound: 497
+  Inf proof: 5
 
-Explored 2065 nodes (44097 simplex iterations) in 0.77 seconds (1.11 work units)
+Explored 2862 nodes (82706 simplex iterations) in 0.94 seconds (1.44 work units)
 Thread count was 16 (of 16 available processors)
 
-Solution count 10: 3.63957 3.63957 3.63961 ... 3.81511
+Solution count 10: 3.63957 3.97171 4.05164 ... 6.83312
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 3.639567723358e+00, best bound 3.639496856800e+00, gap 0.0019%
+Best objective 3.639567723358e+00, best bound 3.639567723358e+00, gap 0.0000%
 
-User-callback calls 6146, time in user-callback 0.00 sec
+User-callback calls 8139, time in user-callback 0.00 sec
 partitioning
 constructing product automaton vertices
 constructing product automaton edges
 removing redundant constraints
 merging equivalent modes
-34 modes
-120 transitions
-[20, 8, 17, 23, 32, 6, 11, 9, 31, 29, 25, 34, 4, 13, 15, 2, 27, 18]
-[5, 16, 12, 24, 28, 30, 1, 19, 22, 14, 3, 7, 33, 21, 10, 26]
+31 modes
+102 transitions
+[5, 20, 12, 8, 17, 23, 22, 6, 31, 29, 25, 4, 13, 15, 2, 10, 18, 27]
+[16, 24, 28, 30, 1, 19, 11, 9, 14, 3, 7, 21, 26]

@@ -28,7 +28,7 @@ println(HybridSystems.ntransitions(s), " transitions")
 println(q0)
 println(qT)
 
-scatter(xq[:,1],xq[:,2],label=false)
+scatter(xq[:,1],xq[:,2],label=false,markersize=2)
 plot!([-0.9, -0.8, -0.8, -0.9, -0.9], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:yellow, fill=true, fillalpha=0.2, label=false)
 plot!([-0.6, -0.4, -0.4, -0.6, -0.6], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=:dash, color=:blue, fill=true, fillalpha=0.2, label=false)
 plot!([-0.5, -0.2, -0.2, -0.5, -0.5], [-0.9, -0.9, -0.8, -0.8, -0.9], linestyle=:dash, color=:red, fill=true, fillalpha=0.2, label=false)
