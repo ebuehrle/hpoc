@@ -3,7 +3,7 @@ using LinearAlgebra
 import Polyhedra
 using HybridSystems, MathematicalSystems
 using JuMP, HiGHS
-using ProgressBars
+using ProgressMeter
 include("formula.jl")
 include("graph.jl")
 
@@ -19,7 +19,7 @@ zerosurface(p::HPolyhedron) = let n = fulldim(p); let p = intersection(p, Hyperr
 function partition(d)
     V = []
     println("partitioning")
-    for (k,v) in ProgressBar(d)
+    @showprogress for (k,v) in d
         if isempty(V)
             V = [
                 (([k],[]), HPolyhedron([v])),
@@ -27,16 +27,16 @@ function partition(d)
             ]
             continue
         end
-        V1 = []
-        for (xk,xv) in V
-            xkp = ([xk[1];k], xk[2])
-            xvp = intersection(xv, v)
-            xkn = (xk[1], [xk[2];k])
-            xvn = intersection(xv, LazySets.HalfSpace(-v.a,-v.b))
-            if !isempty(xvp) && !zerovolume(xvp) push!(V1, (xkp, xvp)) end
-            if !isempty(xvn) && !zerovolume(xvn) push!(V1, (xkn, xvn)) end
-        end
-        V = V1
+
+        w = LazySets.HalfSpace(-v.a,-v.b)
+
+        vp = collect((([xk[1];k], xk[2]), intersection(xv, v)) for (xk,xv) in V)
+        vpne = map(((x,v),)->!isempty(v) && !zerovolume(v), vp)
+        
+        vn = collect(((xk[1], [xk[2];k]), intersection(xv, w)) for (xk,xv) in V)
+        vnne = map(((x,v),)->!isempty(v) && !zerovolume(v), vn)
+        
+        V = [vp[vpne]; vn[vnne]]
     end
     return collect(Set(V))
 end
@@ -46,9 +46,10 @@ function split_edge_disjunctions(E, L)
     remove_braces(x) = (x[1] == '(') ? x[2:end-1] : x
     split_conjunctions(x) = strip.(split(x, "&"))
     remove_negation(x) = x[2:end]
+    remove_1(x) = filter(l -> l != "1", x)
     group_by_signs(x) = (filter(l->!startswith(l,'!'),x), remove_negation.(filter(l->startswith(l,'!'),x)))
 
-    split_label(x) = group_by_signs.(split_conjunctions.(remove_braces.(split_disjunctions(x))))
+    split_label(x) = group_by_signs.(remove_1.(split_conjunctions.(remove_braces.(split_disjunctions(x)))))
     S = split_label.(L)
 
     T = [[e for _ in 1:length(s)] for (e,s) in zip(E,S)]
@@ -109,7 +110,7 @@ function _merge_modes(V, E)
 end
 
 function merge_eq_modes(V, E, q0, qT)
-    for _ in ProgressBar(1:length(V))
+    @showprogress for _ in 1:length(V)
         r = _merge_modes(V, E)
         if isnothing(r) break end
 
@@ -131,13 +132,24 @@ function merge_eq_modes(V, E, q0, qT)
     return V, E, q0, qT
 end
 
-function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTranslator(deterministic=true); merge_modes=true)
-    l, d = translate(translator, f)
+function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Union{Formula, String}, translator = LTLTranslator(deterministic=true); merge_modes=true, remove_redundant=true, V=nothing, O=nothing)
+    
+    if isnothing(V)
+        l, d = translate(translator, f)
+        h = reduce(merge, x.f for x in values(d))
+        Vp = partition(h)
+        O1 = [o for (o,_) in Vp]
+        O1 = map(o -> let k = collect(keys(d)); satisfied = [issatisfied(d[x], o[1], o[2]) for x in k]; (k[satisfied], k[(!).(satisfied)]) end, O1)
+        V1 = [v for (_,v) in Vp]
+    else
+        @assert length(V) == length(O)
+        l = Spot.translate(translator, Spot.SpotFormula(f))
+        allO = reduce(vcat, O)
+        O1 = map(o -> (o, setdiff(allO, o)), O)
+        V1 = V
+    end
 
-    Vp = partition(d)
-    O1 = [o for (o,_) in Vp]
-    V1 = [v for (_,v) in Vp]
-    E1 = [(i,j) for (i,(_,v1)) = enumerate(Vp) for (j,(_,v2)) = enumerate(Vp) if (i != j) && !isempty(intersection(v1, v2)) && !zerosurface(intersection(v1, v2))]
+    E1 = [(i,j) for (i,v1) = enumerate(V1) for (j,v2) = enumerate(V1) if (i != j) && !isempty(intersection(v1, v2)) && !zerosurface(intersection(v1, v2))]
 
     V2 = collect(1:num_states(l))
     E2 = get_edges(l)
@@ -158,6 +170,11 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Formula, translator = LTLTr
         all(Set.(l) .⊆ Set.(O1[Ix[i2][1]])) for (e,l) in zip(E2,L2)), E)
     q0 = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q20]
     qT = [i for (i,(q1,q2)) in enumerate(Ix) if q2 in q2T]
+
+    if remove_redundant
+        println("removing redundant constraints")
+        V = @showprogress [(remove_redundant_constraints(k),i) for (k,i) in V]
+    end
 
     if merge_modes
         println("merging equivalent modes")

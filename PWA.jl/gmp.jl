@@ -61,6 +61,7 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     Et = stack([q, nmodes(p.s)+2] for q in qT)'
     E = [p.E; Es; Et]
 
+    println("formulating GMP")
     m = GMPModel(p.optimizer)
     set_approximation_mode(m, PRIMAL_RELAXATION_MODE())
     set_approximation_degree(m, 2)
@@ -77,6 +78,7 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     @constraint m Mom.(1, μ[:,1]) .<= 1
     @constraint m Mom.(1, μ[:,3]) .<= 1
 
+    println("formulating SDP")
     optimize!(m)
 
     return μ, E, K, m
@@ -134,7 +136,7 @@ end
 function extract(p::GMPPolicy, (q0, x0)::Tuple{Vector{Int}, Vector}, (qT, xT)::Tuple{Vector{Int}, Vector}; T=20, optimizer=Ipopt.Optimizer)
 
     μ, E, K, m = action(p, (q0, x0), (qT, xT))
-    x, u, q, o = extract(p.s, p.c, μ, E, x0, xT, T=T, optimizer=optimizer)
-    return x, u, q, o, m
+    u, x, q, t, o = extract(p.s, p.c, μ, E, x0, xT, T=T, optimizer=optimizer)
+    return u, x, q, t, o, m
 
 end

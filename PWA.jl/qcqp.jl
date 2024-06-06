@@ -19,7 +19,7 @@ QCQPPolicy(s::HybridSystem, c::Function; T=20, optimizer) = QCQPPolicy(
     optimizer
 )
 
-function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
+function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing; S=1e3)
 
     @assert P[1] == q0
     @assert P[end] == qT
@@ -37,7 +37,7 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
     @variable m h[i=1:M] .>= 1e-4 start=H[i]/p.T
     @variable m 0 .<= s[1:M, 1:p.T] .<= 0.01
     
-    @objective m Min sum(p.c(x[k,t,:], u[k,t,:]) * h[k] for t=1:p.T for k=1:M) + 1000*sum(s.^2)
+    @objective m Min sum(p.c(x[k,t,:], u[k,t,:]) * h[k] for t=1:p.T for k=1:M) + S*sum(s.^2)
 
     @constraint m [k=1:M] x[k,2:end,:]' .== x[k,1:end-1,:]' + h[k]*A*x[k,1:end-1,:]' + h[k]*B*u[k,1:end-1,:]'
     @constraint m [k=1:M,t=1:p.T] p.K[P[k]][1] / norm(p.K[P[k]][1]) * x[k,t,:] .<= p.K[P[k]][2] / norm(p.K[P[k]][1]) .+ s[k,t]
@@ -47,10 +47,11 @@ function action(p::QCQPPolicy, (q0, x0), (qT, xT), P, H=nothing)
 
     optimize!(m)
 
-    xr = reshape(value.(x), (M*p.T,nx))
-    ur = reshape(value.(u), (M*p.T,nu))
-    qr = repeat(P, p.T)
+    xr = reshape(permutedims(value.(x), [2, 1, 3]), (M*p.T,nx))
+    ur = reshape(permutedims(value.(u), [2, 1, 3]), (M*p.T,nu))
+    qr = repeat(P, inner=p.T)
+    tr = [0; cumsum(repeat(value.(h), inner=p.T))[1:end-1]]
 
-    return ur, xr, qr, m
+    return ur, xr, qr, tr, m
 
 end

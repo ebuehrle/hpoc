@@ -1,6 +1,6 @@
 module PWA
 
-export Not, And, Or, G, F, U, translate
+export And_, Not, And, Or, G, F, U, translate, issatisfied
 include("formula.jl")
 
 export GMPPolicy, action, extract
