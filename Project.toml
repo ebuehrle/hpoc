@@ -1,4 +1,5 @@
 [deps]
+COPT = "227a2e2d-e949-4d8e-a1da-7384fe6f0b9f"
 Clarabel = "61c947e1-3e6d-4ee4-985a-eec8c727bd6e"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 DynamicPolynomials = "7c1d4256-1411-5781-91ec-d7bc3513ac07"
