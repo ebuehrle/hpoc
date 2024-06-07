@@ -65,6 +65,6 @@ tt = tq[1]:5.0:tq[end]
 plot_all(lanelets, alpha=0.2, label=false, color=:grey)
 #plot_all!(s1, linecolor=:red, fillcolor=nothing, fillalpha=0, label=false)
 #plot_all!(s2, linecolor=:red, fillcolor=nothing, fillalpha=0, label=false)
-scatter!(x5.(tt),x6.(tt),label=false,color=:orange)
-scatter!(x1.(tt),x2.(tt),label=false,color=:blue)
+scatter!(x5.(tt),x6.(tt),label=false,color=2)
+scatter!(x1.(tt),x2.(tt),label=false,color=1)
 savefig("img/roundabout-1.pdf")
