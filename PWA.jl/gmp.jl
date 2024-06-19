@@ -3,6 +3,7 @@ using HybridSystems
 using SemialgebraicSets
 using HiGHS
 using Ipopt
+using PolyJuMP, SumOfSquares
 include("graph.jl")
 include("qcqp.jl")
 
@@ -63,7 +64,8 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     println("formulating GMP")
     m = GMPModel(p.optimizer)
-    set_approximation_mode(m, PRIMAL_RELAXATION_MODE())
+    set_approximation_mode(m, DUAL_STRENGTHEN_MODE())
+    PolyJuMP.setdefault!(approximation_model(m), PolyJuMP.NonNegPoly, SDSOSCone)
     set_approximation_degree(m, 2)
     b = monomials(x, 0:approximation_degree(m))
     dbdt = differentiate(b, x) * f(x,u)
@@ -80,6 +82,7 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     println("formulating SDP")
     optimize!(m)
+    println(PolyJuMP.getpolydata(approximation_model(m)))
 
     return μ, E, K, m
 
