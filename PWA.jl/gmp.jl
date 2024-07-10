@@ -74,15 +74,14 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][1])
     @objective m Min sum(Mom.(p.c(x,u), μ[:,2])) + 0.01*sum(Mom.(1, μ))
     cn = @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
-    @constraint m [i=modes] sum(μ[eout(E,i),1]) == sum(μ[einc(E,i),3])
-    @constraint m sum(μ[eout(E,nmodes(p.s)+1),3]) == μ0
-    @constraint m sum(μ[einc(E,nmodes(p.s)+2),3]) == μT
+    @constraint m [i=modes] Mom.(b,sum(μ[eout(E,i),1])) .== Mom.(b,sum(μ[einc(E,i),3]))
+    @constraint m Mom.(b,sum(μ[eout(E,nmodes(p.s)+1),3])) .== integrate.(b,μ0)
+    @constraint m Mom.(b,sum(μ[einc(E,nmodes(p.s)+2),3])) .== integrate.(b,μT)
     @constraint m Mom.(1, μ[:,1]) .<= 1
     @constraint m Mom.(1, μ[:,3]) .<= 1
 
     println("formulating SDP")
     optimize!(m)
-    println(PolyJuMP.getpolydata(approximation_model(m)))
 
     return μ, E, K, m
 
@@ -139,6 +138,7 @@ end
 function extract(p::GMPPolicy, (q0, x0)::Tuple{Vector{Int}, Vector}, (qT, xT)::Tuple{Vector{Int}, Vector}; T=20, optimizer=Ipopt.Optimizer)
 
     μ, E, K, m = action(p, (q0, x0), (qT, xT))
+    println("reconstructing trajectory")
     u, x, q, t, o = extract(p.s, p.c, μ, E, x0, xT, T=T, optimizer=optimizer)
     return u, x, q, t, o, m
 
