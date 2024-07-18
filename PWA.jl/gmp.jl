@@ -1,4 +1,5 @@
-using MomentOpt, DynamicPolynomials
+using SumOfSquares, DynamicPolynomials
+using MultivariateMoments
 using HybridSystems
 using SemialgebraicSets
 using HiGHS
@@ -17,18 +18,15 @@ end
 struct GMPPolicy
     s::HybridSystem
     c::Function
-    K::Vector{Tuple{Tuple{Matrix, Array}, Tuple{Matrix, Array}}}
+    K::Vector{Tuple{Matrix, Array}}
     E::Matrix
     optimizer
 end
 
 GMPPolicy(s, c; optimizer) = let 
     E = stack([(source(s,t),target(s,t)) for t in HybridSystems.transitions(s)])'
-    Ks= [(stack([h.a for h in HybridSystems.mode(s,i).X.constraints])',
-          stack([h.b for h in HybridSystems.mode(s,i).X.constraints])) for (i,_) in eachrow(E)]
-    Kt= [(stack([h.a for h in HybridSystems.mode(s,i).X.constraints])',
-          stack([h.b for h in HybridSystems.mode(s,i).X.constraints])) for (_,i) in eachrow(E)]
-    K = collect(zip(Ks, Kt))
+    K = [(stack([h.a for h in HybridSystems.mode(s,i).X.constraints])',
+          stack([h.b for h in HybridSystems.mode(s,i).X.constraints])) for i in 1:nmodes(s)]
     GMPPolicy(s, c, K, E, optimizer)
 end
 
@@ -45,42 +43,37 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
     nx, nu = size(B)
 
     @polyvar x[1:nx] u[1:nu]
-    μ0 = DiracMeasure([x;u], [x0; zeros(nu)])
-    μT = DiracMeasure([x;u], [xT; zeros(nu)])
 
-    f(x,u) = A*x + B*u
-
-    Kf = [(set(k1, x), set(k2, x)) for (k1, k2) in p.K]
-    Ks = [(set(HybridSystems.mode(p.s, q).X, x),
-           set(HybridSystems.mode(p.s, q).X, x)) for q in q0]
-    Kt = [(set(HybridSystems.mode(p.s, q).X, x),
-           set(HybridSystems.mode(p.s, q).X, x)) for q in qT]
+    Kf = [set(HybridSystems.mode(p.s, q).X, x) for q in 1:nmodes(p.s)]
+    Ks = [set(HybridSystems.mode(p.s, q).X, x) for q in q0]
+    Kt = [set(HybridSystems.mode(p.s, q).X, x) for q in qT]
     K = [Kf; Ks; Kt]
 
     Es = stack([nmodes(p.s)+1, q] for q in q0)'
     Et = stack([q, nmodes(p.s)+2] for q in qT)'
     E = [p.E; Es; Et]
 
-    println("formulating GMP")
-    m = GMPModel(p.optimizer)
-    set_approximation_mode(m, PRIMAL_RELAXATION_MODE())
-    set_approximation_degree(m, 2)
-    b = monomials(x, 0:approximation_degree(m))
-    dbdt = differentiate(b, x) * f(x,u)
+    f(x,u) = A*x + B*u
 
-    modes = collect(Set(p.E))
-    @variable m μ[i=1:length(K),j=1:3] Meas([x;u], support=K[i][1])
-    @objective m Min sum(Mom.(p.c(x,u), μ[:,2])) + 0.01*sum(Mom.(1, μ))
-    cn = @constraint m [i=1:length(K)] Mom.(dbdt, μ[i,2]) .== Mom.(b, μ[i,3]) - Mom.(b, μ[i,1])
-    @constraint m [i=modes] sum(μ[eout(E,i),1]) == sum(μ[einc(E,i),3])
-    @constraint m sum(μ[eout(E,nmodes(p.s)+1),3]) == μ0
-    @constraint m sum(μ[einc(E,nmodes(p.s)+2),3]) == μT
-    @constraint m Mom.(1, μ[:,1]) .<= 1
-    @constraint m Mom.(1, μ[:,3]) .<= 1
+    println("formulating SOS")
+    m = SOSModel(p.optimizer)
+    @variable m V[i=1:length(p.K)] Poly(monomials(x, 0:2))
+    @variable m V0 Poly(monomials(x, 0:2))
+    @variable m VT Poly(monomials(x, 0:2))
+    c2 = @constraint m [i=1:length(p.K)] differentiate(V[i],x)'*f(x,u) >= -p.c(x,u) domain=K[i]
+    c1 = @constraint m [i=1:size(p.E,1)] V[E[i,1]] <= V[E[i,2]] domain=@set K[E[i,1]] && K[E[i,2]]
+    cT = @constraint m [i=1:length(qT)] V[qT[i]] <= VT
+    c0 = @constraint m [i=1:length(q0)] V0 <= V[q0[i]]
+    @constraint m VT(xT) <= 0
+    @objective m Max V0(x0)
 
     println("formulating SDP")
     optimize!(m)
 
+    μf = collect(zip(moments.(c1), [moments(c2[e[1]]) for e in eachrow(p.E)]))
+    μ0 = collect(zip(moments.(c0), moments.(c0)))
+    μT = collect(zip(moments.(cT), moments.(cT)))
+    μ = [μf; μ0; μT]
     return μ, E, K, m
 
 end
@@ -124,8 +117,8 @@ end
 
 function extract(s, c, μ, E::AbstractMatrix, x0, xT; T=20, optimizer=Ipopt.Optimizer)
 
-    p = integrate.(1, μ[:,1])
-    H = integrate.(1, μ[:,2])
+    p = [m[1].a[1] for m in μ]
+    H = [m[2].a[1] for m in μ]
     P = decode(E, log.(clamp.(p, 1e-6, 1-1e-6)), nmodes(s)+1, nmodes(s)+2)
     P = P[2:end-1]
     qpolicy = QCQPPolicy(s, c; T=T, optimizer=optimizer)
