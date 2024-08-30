@@ -1,0 +1,75 @@
+Model fingerprint: 281d9ad0
+
+Using Cardinal Optimizer v7.1.5 on Linux
+Hardware has 8 cores and 16 threads. Using instruction set X86_NATIVE (1)
+Maximizing an SDP problem
+
+The original problem has:
+    0 rows, 7560 columns and 0 non-zero elements
+    612 PSD columns
+    17136 PSD constraints
+
+Using Primal-Dual Method
+
+Starting barrier solver using 8 threads
+
+Problem info:
+Range of matrix coefficients:    [2e-01,1e+00]
+Range of rhs coefficients:       [5e-03,1e+00]
+Range of bound coefficients:     [0e+00,0e+00]
+Range of cost coefficients:      [3e-02,1e-01]
+
+Factor info:
+Number of dense columns:         1
+Number of matrix entries:        3.046e+05
+Number of factor entries:        5.871e+07
+Number of factor flops:          4.087e+11
+
+Iter       Primal.Obj         Dual.Obj      Compl  Primal.Inf  Dual.Inf    Time
+   0  +0.00000000e+00  +0.00000000e+00   6.77e+03    1.00e+00  1.41e+00   0.44s
+   1  +1.30325299e+02  +1.30009621e+02   4.85e+03    6.95e-01  9.84e-01   1.94s
+   2  +3.20532997e+02  +3.19662547e+02   9.84e+02    1.22e-01  1.72e-01   3.32s
+   3  +1.61184024e+02  +1.60958321e+02   2.68e+02    2.37e-02  3.35e-02   4.69s
+   4  +3.75721521e+01  +3.75185951e+01   9.06e+01    5.82e-03  8.23e-03   6.06s
+   5  +7.26202681e+00  +7.24909390e+00   2.46e+01    1.35e-03  1.91e-03   7.43s
+   6  +9.45803315e-01  +9.41311946e-01   8.91e+00    4.77e-04  6.74e-04   8.82s
+   7  -5.18270433e-01  -5.20507513e-01   4.36e+00    2.51e-04  3.54e-04  10.20s
+   8  -1.41154429e+00  -1.41291472e+00   2.54e+00    1.62e-04  2.29e-04  11.57s
+   9  -1.94123864e+00  -1.94219762e+00   1.70e+00    1.16e-04  1.65e-04  12.95s
+  10  -2.40814439e+00  -2.40876332e+00   1.05e+00    7.53e-05  1.06e-04  14.31s
+  11  -2.50962753e+00  -2.51015858e+00   8.93e-01    6.43e-05  9.09e-05  15.71s
+  12  -2.80171055e+00  -2.80200037e+00   4.74e-01    3.49e-05  4.93e-05  17.08s
+  13  -2.90696303e+00  -2.90715703e+00   3.15e-01    2.35e-05  3.32e-05  18.46s
+  14  -2.99047074e+00  -2.99058696e+00   1.87e-01    1.43e-05  2.03e-05  19.82s
+  15  -3.06714614e+00  -3.06719730e+00   8.29e-02    6.63e-06  9.38e-06  21.19s
+  16  -3.09588161e+00  -3.09591421e+00   5.22e-02    4.30e-06  6.07e-06  22.56s
+  17  -3.10906035e+00  -3.10908414e+00   3.78e-02    3.15e-06  4.46e-06  23.94s
+  18  -3.12541315e+00  -3.12542642e+00   2.10e-02    1.78e-06  2.52e-06  25.32s
+  19  -3.13381724e+00  -3.13382496e+00   1.22e-02    1.05e-06  1.48e-06  26.71s
+  20  -3.13789106e+00  -3.13789599e+00   7.85e-03    6.79e-07  9.58e-07  28.09s
+  21  -3.13946635e+00  -3.13946995e+00   5.74e-03    5.02e-07  7.05e-07  29.48s
+  22  -3.14158980e+00  -3.14159175e+00   3.15e-03    2.82e-07  3.89e-07  30.85s
+  23  -3.14236142e+00  -3.14236278e+00   2.22e-03    2.00e-07  2.76e-07  32.35s
+  24  -3.14362033e+00  -3.14362074e+00   6.82e-04    6.59e-08  8.63e-08  33.96s
+  25  -3.14362764e+00  -3.14362804e+00   6.74e-04    6.81e-08  8.53e-08  35.72s
+  26  -3.14363528e+00  -3.14363567e+00   6.65e-04    6.90e-08  8.41e-08  37.46s
+  27  -3.14364300e+00  -3.14364339e+00   6.55e-04    6.91e-08  8.30e-08  39.17s
+
+Barrier status:                  IMPRECISE
+Primal objective:                -3.14388904e+00
+Dual objective:                  -3.14388926e+00
+Duality gap (abs/rel):           2.19e-07 / 6.98e-08
+Primal infeasibility (abs/rel):  1.38e-07 / 1.38e-07
+Dual infeasibility (abs/rel):    4.72e-08 / 4.72e-08
+
+Solving finished
+DIMACS errors: 1.274e-06 0.000e+00 0.000e+00 0.000e+00 9.848e-09 1.036e-04
+Status: Imprecise  Objective: 3.1438890387e+00  Iterations: 27  Time: 39.21s
+Cardinal Optimizer v7.1.5. Build date Jul 15 2024
+Copyright Cardinal Operations 2024. All Rights Reserved
+partitioning
+constructing product automaton vertices
+constructing product automaton edges
+removing redundant constraints
+formulating GMP
+formulating SDP
