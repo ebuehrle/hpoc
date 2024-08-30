@@ -2,7 +2,7 @@ include("PWA.jl/PWA.jl")
 using Symbolics, LazySets
 using HybridSystems
 using JuMP
-using MosekTools
+using COPT
 using Ipopt
 using Plots; ENV["GKSwstype"] = "100"
 using .PWA
@@ -65,7 +65,7 @@ println(HybridSystems.ntransitions(s), " transitions")
 println(q0)
 println(qT)
 
-policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
+policy = GMPPolicy(s, c; optimizer=COPT.ConeOptimizer)
 uq, xq, qq, tq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
 x1 = linear_interpolation(tq, xq[:,1])

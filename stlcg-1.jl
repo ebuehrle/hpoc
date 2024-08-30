@@ -2,7 +2,7 @@ include("PWA.jl/PWA.jl")
 using Symbolics, LazySets
 using HybridSystems
 using JuMP
-using MosekTools
+using COPT
 using Ipopt
 using Plots; ENV["GKSwstype"] = "100"
 using .PWA
@@ -22,7 +22,7 @@ x0 = [-0.9, -0.9, 0.0, 0.0]
 xT = [0.0, 0.0, 0.0, 0.0]
 
 s, q0, qT = PPWA(A, B, l, merge_modes=false)
-policy = GMPPolicy(s, c; optimizer=Mosek.Optimizer)
+policy = GMPPolicy(s, c; optimizer=COPT.ConeOptimizer)
 uq, xq, qq, tq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipopt.Optimizer)
 
 println(HybridSystems.nmodes(s), " modes")
