@@ -1,5 +1,5 @@
 julia --project stlcg-1.jl > img/stlcg-1.log
-mv gmp.dat-s img/stlcg-1.dat-s
+mv gmp.sdpa img/stlcg-1.sdpa
 julia --project stlcg-2.jl > img/stlcg-2.log
 mv gmp.dat-s img/stlcg-2.dat-s
 julia --project doorpuzzle-1.jl > img/doorpuzzle-1.log

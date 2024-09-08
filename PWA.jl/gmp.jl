@@ -80,7 +80,7 @@ function action(p::GMPPolicy, (q0,x0), (qT,xT))
 
     println("formulating SDP")
     optimize!(m)
-    write_to_file(m.approximation_model, "gmp.dat-s")
+    write_to_file(approximation_model(m), "gmp.sdpa")
 
     return μ, E, K, m
 
