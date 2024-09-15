@@ -36,8 +36,8 @@ V = let x = Symbolics.variables(:x, 1:8)
     # r2c = HPolyhedron([HalfSpace(-0.2 <= x[5], x), HalfSpace(x[5] <= 0.2, x), HalfSpace(-0.2 <= x[6], x), HalfSpace(x[6] <= 0.2, x)])
     
     ra = HPolyhedron([
-        HalfSpace(-1.0 <= x[1], x), HalfSpace(x[1] <= 1.0, x), HalfSpace(-1.0 <= x[2], x), HalfSpace(x[2] <= 1.0, x),
-        HalfSpace(-1.0 <= x[5], x), HalfSpace(x[5] <= 1.0, x), HalfSpace(-1.0 <= x[6], x), HalfSpace(x[6] <= 1.0, x),
+        HalfSpace(-0.4 <= x[1], x), HalfSpace(x[1] <= 0.4, x), HalfSpace(-0.4 <= x[2], x), HalfSpace(x[2] <= 0.4, x),
+        HalfSpace(-0.4 <= x[5], x), HalfSpace(x[5] <= 0.4, x), HalfSpace(-0.4 <= x[6], x), HalfSpace(x[6] <= 0.4, x),
     ])
 
     [
