@@ -157,6 +157,7 @@ function PPWA(A::Matrix, B::Union{Vector,Matrix}, f::Union{Formula, String}, tra
     E2, L2 = split_edge_disjunctions(E2, L2)
     q20 = [get_init_state_number(l),]
     q2T = collect(reduce(∪, get_rabin_acceptance(l)[1]))
+    q2T = isempty(q2T) ? V2 : q2T
 
     println("constructing product automaton vertices")
     V = [(v1,v2) for (i1,v1) in enumerate(V1) for (i2,v2) in enumerate(V2)]

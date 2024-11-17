@@ -57,9 +57,8 @@ x6 = linear_interpolation(tq, xq[:,6])
 tt = tq[1]:2:tq[end]
 
 plot_all(lanelets, alpha=0.2, label=false, ratio=:equal, color=:grey)
-#plot_all!(s1, linecolor=:red, fillcolor=nothing, fillalpha=0, label=false)
-#plot_all!(s2, linecolor=:red, fillcolor=nothing, fillalpha=0, label=false)
-scatter!(x5.(tt),x6.(tt),label=false,color=1)
-scatter!(x1.(tt),x2.(tt),label=false,color=2)
-xlims!(25,90)
+scatter!(x5.(tt),x6.(tt),label=false,zcolor=tt,colorbar=true)
+scatter!(x1.(tt),x2.(tt),label=false,zcolor=tt,colorbar=true)
+xlims!(30,90)
+ylims!(-25,20)
 savefig("img/merge-1.pdf")
