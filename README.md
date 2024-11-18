@@ -1,4 +1,3 @@
-# moment-hoc
 This is code for the paper "Optimal Control of Hybrid Systems via Occupation Measures".
 
 ## Getting Started
