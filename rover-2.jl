@@ -86,4 +86,4 @@ plot!([-0.4, -0.3, -0.3, -0.4, -0.4], [-0.05, -0.05, 0.05, 0.05, -0.05], color=:
 
 #plot!([-0.2, 0.2, 0.2, -0.2, -0.2], [-0.2, -0.2, 0.2, 0.2, -0.2], color=:blue, linestyle=:dash, fill=true, fillalpha=0.2, label=false)
 
-savefig("img/rover-2.pdf")
+savefig("out/rover-2.pdf")

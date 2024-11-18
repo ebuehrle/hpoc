@@ -39,4 +39,4 @@ plot!([-0.6, -0.4, -0.4, -0.6, -0.6], [-0.6, -0.6, -0.4, -0.4, -0.6], linestyle=
 plot!([-0.5, -0.2, -0.2, -0.5, -0.5], [-0.9, -0.9, -0.8, -0.8, -0.9], linestyle=:dash, color=:red, fill=true, fillalpha=0.2, label=false)
 plot!([-0.5, -0.25, -0.25, -0.5, -0.5], [-0.25, -0.25, -0.0, -0.0, -0.25], linestyle=:dash, color=:green, fill=true, fillalpha=0.2, label=false)
 plot!([-1.1,  0.1,  0.1, -1.1, -1.1], [-1.1, -1.1,  0.1,  0.1, -1.1], color=:black, label=false)
-savefig("img/stlcg-1.pdf")
+savefig("out/stlcg-1.pdf")

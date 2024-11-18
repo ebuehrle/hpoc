@@ -98,4 +98,4 @@ annotate!(0.97, -0.75, text("③", :right, :center, :red))
 annotate!(0.20, -0.50, text("④", :right, :center, :red))
 annotate!(0.97, -0.25, text("⑤", :right, :center, :red))
 
-savefig("img/doorpuzzle-1.pdf")
+savefig("out/doorpuzzle-1.pdf")
