@@ -5,4 +5,4 @@ The code requires an installation of the SDP solver [MOSEK](https://www.mosek.co
 
 ## Running the experiments
 1. Clone the repository and `instantiate` a Julia environment.
-2. Run the experiments with `run_all.sh`. Results will be written to the `img` folder.
+2. Run the experiments with `run_all.sh`. Output will be written to the `img` folder.
