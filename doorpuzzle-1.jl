@@ -4,7 +4,7 @@ using HybridSystems
 using JuMP
 using MosekTools
 using Ipopt
-using Plots; ENV["GKSwstype"] = "100"
+using Plots; ENV["GKSwstype"] = "100"; default(fontfamily="Computer Modern", framestyle=:box)
 using .PWA
 using Interpolations
 
