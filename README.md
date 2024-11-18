@@ -7,4 +7,4 @@ The experiment scripts will detect typical installation locations automatically.
 
 ## Running the experiments
 1. Clone the repository, then `activate`  and `instantiate` a Julia environment.
-2. Run `run_all.sh` in a shell to run all the experiments sequentially. The scripts will output results to the `img` folder.
+2. Run the experiments with `run_all.sh`. Results will be output to the `img` folder.
