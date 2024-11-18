@@ -5,7 +5,7 @@ using HybridSystems
 using JuMP
 using MosekTools
 using Ipopt
-using Plots; ENV["GKSwstype"] = "100"
+using Plots; ENV["GKSwstype"] = "100"; default(fontfamily="Computer Modern", framestyle=:box)
 using Interpolations
 
 hpoly(h, x, s) = HPolyhedron([LazySets.HalfSpace(c.a' * x[s] <= c.b, x) for c in h.constraints])
