@@ -73,8 +73,8 @@ x2 = linear_interpolation(tq, xq[:,2])
 x5 = linear_interpolation(tq, xq[:,5])
 x6 = linear_interpolation(tq, xq[:,6])
 tt = tq[1]:0.04:tq[end]
-scatter(x1.(tt),x2.(tt),label=false,markersize=2,zcolor=tt,markerstrokewidth=0,colorbar=false)
-scatter!(x5.(tt),x6.(tt),label=false,markersize=2,zcolor=tt,markerstrokewidth=0,colorbar=false)
+scatter(x1.(tt),x2.(tt),label=false,markersize=2,color=1)
+scatter!(x5.(tt),x6.(tt),label=false,markersize=2,color=2)
 
 plot!([-0.4, -0.3, -0.3, -0.4, -0.4], [-0.4, -0.4, -0.3, -0.3, -0.4], color=:green, linestyle=:dash, fill=true, fillalpha=0.2, label=false)
 plot!([ 0.3,  0.4,  0.4,  0.3,  0.3], [-0.4, -0.4, -0.3, -0.3, -0.4], color=:green, linestyle=:dash, fill=true, fillalpha=0.2, label=false)
