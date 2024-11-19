@@ -1,22 +1,22 @@
-Running HiGHS 1.7.0 (git hash: 50670fd4c): Copyright (c) 2024 HiGHS under MIT licence terms
+Running HiGHS 1.7.2 (git hash: 5ce7a2753): Copyright (c) 2024 HiGHS under MIT licence terms
 Coefficient ranges:
   Matrix [1e+00, 1e+00]
-  Cost   [7e-06, 1e+01]
+  Cost   [4e-06, 1e+01]
   Bound  [1e+00, 1e+00]
   RHS    [1e+00, 1e+00]
 Presolving model
 150 rows, 474 cols, 948 nonzeros  0s
-149 rows, 474 cols, 941 nonzeros  0s
-Presolve : Reductions: rows 149(-21); columns 474(-66); elements 941(-139)
+149 rows, 474 cols, 937 nonzeros  0s
+Presolve : Reductions: rows 149(-21); columns 474(-66); elements 937(-143)
 Solving the presolved LP
 Using EKK dual simplex solver - serial
   Iteration        Objective     Infeasibilities num(sum)
           0     0.0000000000e+00 Ph1: 0(0) 0s
-          9     6.9974406709e-01 Pr: 0(0) 0s
+          9     6.9855356296e-01 Pr: 0(0) 0s
 Solving the original LP from the solution after postsolve
 Model   status      : Optimal
 Simplex   iterations: 9
-Objective value     :  6.9974406709e-01
+Objective value     :  6.9855356296e-01
 HiGHS run time      :          0.00
 
 ******************************************************************************
@@ -25,7 +25,7 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit https://github.com/coin-or/Ipopt
 ******************************************************************************
 
-This is Ipopt version 3.14.14, running with linear solver MUMPS 5.6.2.
+This is Ipopt version 3.14.16, running with linear solver MUMPS 5.7.3.
 
 Number of nonzeros in equality constraint Jacobian...:     3192
 Number of nonzeros in inequality constraint Jacobian.:     1520
@@ -86,12 +86,12 @@ iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
 Number of Iterations....: 36
 
                                    (scaled)                 (unscaled)
-Objective...............:   3.4529202542004103e+00    3.4529202542004103e+00
-Dual infeasibility......:   8.0718302583587634e-09    8.0718302583587634e-09
+Objective...............:   3.4529202542004080e+00    3.4529202542004080e+00
+Dual infeasibility......:   8.0718302583587733e-09    8.0718302583587733e-09
 Constraint violation....:   1.9646189509210307e-10    1.9646189509210307e-10
 Variable bound violation:   9.7351490935840236e-09    9.7351490935840236e-09
-Complementarity.........:   5.9359448398469717e-09    5.9359448398469717e-09
-Overall NLP error.......:   8.0718302583587634e-09    8.0718302583587634e-09
+Complementarity.........:   5.9359448398487047e-09    5.9359448398487047e-09
+Overall NLP error.......:   8.0718302583587733e-09    8.0718302583587733e-09
 
 
 Number of objective function evaluations             = 40
@@ -101,7 +101,7 @@ Number of inequality constraint evaluations          = 40
 Number of equality constraint Jacobian evaluations   = 37
 Number of inequality constraint Jacobian evaluations = 37
 Number of Lagrangian Hessian evaluations             = 36
-Total seconds in IPOPT                               = 0.601
+Total seconds in IPOPT                               = 0.578
 
 EXIT: Optimal Solution Found.
 partitioning
@@ -127,7 +127,7 @@ Presolve started.
 Linear dependency checker started.
 Linear dependency checker terminated.
 Eliminator started.
-Freed constraints in eliminator : 15559
+Freed constraints in eliminator : 15560
 Eliminator terminated.
 Eliminator started.
 Freed constraints in eliminator : 0
@@ -140,38 +140,41 @@ Lin. dep.  - primal deps.           : 1                 dual deps.             :
 Presolve terminated. Time: 0.06    
 Optimizer  - threads                : 8               
 Optimizer  - solved problem         : the primal      
-Optimizer  - Constraints            : 47783           
+Optimizer  - Constraints            : 47779           
 Optimizer  - Cones                  : 1               
-Optimizer  - Scalar variables       : 34857             conic                  : 28845           
+Optimizer  - Scalar variables       : 34853             conic                  : 28845           
 Optimizer  - Semi-definite variables: 1620              scalarized             : 45360           
 Factor     - setup time             : 0.17            
 Factor     - dense det. time        : 0.00              GP order time          : 0.00            
-Factor     - nonzeros before factor : 8.16e+05          after factor           : 3.23e+06        
-Factor     - dense dim.             : 2                 flops                  : 4.17e+08        
+Factor     - nonzeros before factor : 8.16e+05          after factor           : 3.28e+06        
+Factor     - dense dim.             : 2                 flops                  : 4.36e+08        
 ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
-0   1.8e+00  1.0e+00  1.0e+00  0.00e+00   4.000000000e-02   4.000000000e-02   1.0e+00  0.26  
-1   1.6e+00  8.7e-01  8.1e-01  1.30e+00   -9.491536000e+00  -9.478883549e+00  8.7e-01  0.33  
-2   3.3e-01  1.8e-01  6.0e-02  1.20e+00   -4.843162156e+01  -4.847193196e+01  1.8e-01  0.40  
-3   5.7e-02  3.2e-02  2.8e-03  1.44e+00   -1.054741351e+01  -1.055891564e+01  3.2e-02  0.47  
-4   1.6e-02  8.7e-03  3.7e-04  1.30e+00   8.449407404e-01   8.423055723e-01   8.7e-03  0.54  
-5   5.7e-03  3.2e-03  8.3e-05  1.16e+00   1.483162719e+00   1.482293821e+00   3.2e-03  0.61  
-6   2.0e-03  1.1e-03  1.9e-05  8.78e-01   2.640776901e+00   2.640466123e+00   1.1e-03  0.68  
-7   1.6e-03  8.7e-04  1.3e-05  9.14e-01   2.784176920e+00   2.783937178e+00   8.7e-04  0.73  
-8   6.0e-04  3.3e-04  3.2e-06  9.33e-01   3.063929606e+00   3.063837559e+00   3.3e-04  0.80  
-9   3.4e-04  1.9e-04  1.4e-06  9.21e-01   3.162515659e+00   3.162464542e+00   1.9e-04  0.86  
-10  2.3e-04  1.3e-04  8.0e-07  9.36e-01   3.202124062e+00   3.202089650e+00   1.3e-04  0.91  
-11  8.5e-05  4.7e-05  1.8e-07  9.50e-01   3.254729726e+00   3.254716844e+00   4.7e-05  0.98  
-12  4.4e-05  2.4e-05  6.9e-08  9.88e-01   3.267125214e+00   3.267118693e+00   2.4e-05  1.05  
-13  2.8e-05  1.5e-05  3.5e-08  9.89e-01   3.270869113e+00   3.270865072e+00   1.5e-05  1.11  
-14  2.2e-05  1.2e-05  2.4e-08  9.85e-01   3.271909953e+00   3.271906815e+00   1.2e-05  1.17  
-15  5.2e-06  2.9e-06  3.0e-09  9.84e-01   3.275256931e+00   3.275256211e+00   2.9e-06  1.24  
-16  1.9e-06  1.0e-06  6.7e-10  9.63e-01   3.275567150e+00   3.275566895e+00   1.0e-06  1.30  
-17  6.8e-07  3.8e-07  1.5e-10  9.40e-01   3.275611496e+00   3.275611406e+00   3.8e-07  1.37  
-18  2.8e-07  1.6e-07  4.2e-11  9.15e-01   3.275591494e+00   3.275591459e+00   1.6e-07  1.49  
-19  2.6e-07  1.5e-07  3.8e-11  9.52e-01   3.275589311e+00   3.275589278e+00   1.5e-07  1.58  
-20  2.6e-07  1.5e-07  3.8e-11  9.52e-01   3.275589311e+00   3.275589278e+00   1.5e-07  1.72  
-21  2.6e-07  1.5e-07  3.8e-11  9.52e-01   3.275589311e+00   3.275589278e+00   1.5e-07  1.85  
-Optimizer terminated. Time: 2.01    
+0   1.9e+00  1.0e+00  1.0e+00  0.00e+00   4.000000000e-02   4.000000000e-02   1.0e+00  0.26  
+1   1.7e+00  8.7e-01  8.1e-01  1.30e+00   -9.468668332e+00  -9.456022081e+00  8.7e-01  0.33  
+2   3.4e-01  1.8e-01  5.9e-02  1.20e+00   -4.918086226e+01  -4.922191888e+01  1.8e-01  0.40  
+3   6.0e-02  3.2e-02  2.7e-03  1.45e+00   -1.059154170e+01  -1.060309563e+01  3.2e-02  0.47  
+4   1.6e-02  8.7e-03  3.7e-04  1.30e+00   8.421917777e-01   8.395534666e-01   8.7e-03  0.54  
+5   6.0e-03  3.2e-03  8.2e-05  1.16e+00   1.484761025e+00   1.483889557e+00   3.2e-03  0.60  
+6   2.2e-03  1.1e-03  1.9e-05  8.78e-01   2.641185530e+00   2.640874084e+00   1.1e-03  0.67  
+7   1.7e-03  8.7e-04  1.3e-05  9.14e-01   2.784547765e+00   2.784307592e+00   8.7e-04  0.73  
+8   6.3e-04  3.3e-04  3.2e-06  9.33e-01   3.063965038e+00   3.063872861e+00   3.3e-04  0.79  
+9   3.6e-04  1.9e-04  1.4e-06  9.21e-01   3.162566196e+00   3.162515028e+00   1.9e-04  0.85  
+10  2.4e-04  1.3e-04  8.0e-07  9.36e-01   3.202159251e+00   3.202124809e+00   1.3e-04  0.91  
+11  8.9e-05  4.7e-05  1.8e-07  9.51e-01   3.254730175e+00   3.254717283e+00   4.7e-05  0.97  
+12  4.6e-05  2.4e-05  6.9e-08  9.88e-01   3.267108418e+00   3.267101886e+00   2.4e-05  1.04  
+13  2.9e-05  1.5e-05  3.5e-08  9.89e-01   3.270856336e+00   3.270852289e+00   1.5e-05  1.10  
+14  2.3e-05  1.2e-05  2.4e-08  9.85e-01   3.271901466e+00   3.271898325e+00   1.2e-05  1.16  
+15  5.5e-06  2.9e-06  3.0e-09  9.84e-01   3.275256013e+00   3.275255291e+00   2.9e-06  1.23  
+16  2.0e-06  1.1e-06  6.9e-10  9.64e-01   3.275564506e+00   3.275564248e+00   1.1e-06  1.30  
+17  7.2e-07  3.8e-07  1.5e-10  9.38e-01   3.275609747e+00   3.275609657e+00   3.8e-07  1.36  
+18  3.1e-07  1.6e-07  4.4e-11  9.18e-01   3.275591643e+00   3.275591606e+00   1.6e-07  1.47  
+19  2.4e-07  1.3e-07  3.1e-11  9.68e-01   3.275584746e+00   3.275584717e+00   1.3e-07  1.51  
+20  2.4e-07  1.2e-07  3.0e-11  9.61e-01   3.275583661e+00   3.275583633e+00   1.2e-07  1.61  
+21  2.2e-07  1.2e-07  2.8e-11  9.51e-01   3.275581386e+00   3.275581360e+00   1.2e-07  1.71  
+22  2.0e-07  8.9e-08  1.8e-11  9.78e-01   3.275572034e+00   3.275572014e+00   9.0e-08  1.80  
+23  2.0e-07  8.9e-08  1.8e-11  9.78e-01   3.275572034e+00   3.275572014e+00   9.0e-08  1.94  
+24  2.0e-07  8.9e-08  1.8e-11  9.78e-01   3.275572034e+00   3.275572014e+00   9.0e-08  2.08  
+Optimizer terminated. Time: 2.23    
 
 168 modes
 536 transitions

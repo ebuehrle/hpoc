@@ -65,7 +65,7 @@ uq, xq, qq, tq, mq, m = extract(policy, (q0, x0), (qT, xT); T=20, optimizer=Ipop
 x1 = linear_interpolation(tq, xq[:,1])
 x2 = linear_interpolation(tq, xq[:,2])
 tt = tq[1]:0.04:tq[end]
-scatter(x1.(tt),x2.(tt),label=false,markersize=2,zcolor=tt,markerstrokewidth=0,colorbar=false)
+scatter(x1.(tt),x2.(tt),label=false,markersize=2,zcolor=tt,markerstrokewidth=0,colorbar=false,grid=false)
 plot!([0.55, 0.70, 0.70, 0.55, 0.55], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.30, 0.45, 0.45, 0.30, 0.30], [-0.70, -0.70, -0.55, -0.55, -0.70], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)
 plot!([0.05, 0.20, 0.20, 0.05, 0.05], [-0.95, -0.95, -0.80, -0.80, -0.95], color=:green, fill=true, fillalpha=0.2, linestyle=:dash, label=false)

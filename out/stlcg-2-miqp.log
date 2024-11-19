@@ -5,69 +5,77 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: AMD Ryzen 7 5800X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
 Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
 
-Optimize a model with 1115 rows, 1110 columns and 6104 nonzeros
-Model fingerprint: 0x3f1fbb8e
+Optimize a model with 1084 rows, 1080 columns and 5724 nonzeros
+Model fingerprint: 0x59223c8b
 Model has 180 quadratic objective terms
-Model has 3060 general constraints
-Variable types: 180 continuous, 930 integer (930 binary)
+Model has 2880 general constraints
+Variable types: 180 continuous, 900 integer (900 binary)
 Coefficient statistics:
   Matrix range     [3e-01, 1e+00]
   Objective range  [0e+00, 0e+00]
   QObjective range [6e-01, 6e-01]
   Bounds range     [0e+00, 0e+00]
   RHS range        [9e-01, 1e+00]
-  GenCon rhs range [7e-02, 9e+00]
-  GenCon coe range [7e-17, 1e+01]
+  GenCon rhs range [1e-01, 3e+00]
+  GenCon coe range [4e-17, 7e+00]
 Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
-Presolve added 1181 rows and 1226 columns
-Presolve time: 0.04s
-Presolved: 2296 rows, 2336 columns, 6861 nonzeros
-Presolved model has 1574 SOS constraint(s)
+Presolve added 908 rows and 949 columns
+Presolve time: 0.03s
+Presolved: 1992 rows, 2029 columns, 5927 nonzeros
+Presolved model has 1378 SOS constraint(s)
 Presolved model has 168 quadratic objective terms
-Variable types: 1811 continuous, 525 integer (525 binary)
-Found heuristic solution: objective 52.7335279
-Found heuristic solution: objective 16.1987301
-Found heuristic solution: objective 11.5568141
+Variable types: 1546 continuous, 483 integer (483 binary)
+Found heuristic solution: objective 18.3168341
+Found heuristic solution: objective 9.3504638
 
-Root relaxation: objective 3.323499e+00, 1848 iterations, 0.01 seconds (0.01 work units)
+Root relaxation: objective 3.323499e+00, 1499 iterations, 0.01 seconds (0.01 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0    3.32350    0   29   11.55681    3.32350  71.2%     -    0s
-     0     0    3.32350    0   29   11.55681    3.32350  71.2%     -    0s
-     0     2    3.32350    0   29   11.55681    3.32350  71.2%     -    0s
-H  304   222                      10.5962212    3.32350  68.6%   101    0s
-H  378   257                       6.8331197    3.32350  51.4%   101    0s
-H  457   273                       6.5873933    3.32350  49.5%  94.2    0s
-H  458   273                       5.4816979    3.32350  39.4%  94.2    0s
-H  551   293                       5.1634865    3.32350  35.6%  89.2    0s
-H  620   312                       4.9534438    3.32350  32.9%  83.9    0s
-H  640   312                       4.9162123    3.32350  32.4%  82.6    0s
-H  744   311                       4.3583951    3.32350  23.7%  74.5    0s
-H 1010   220                       4.0516440    3.32350  18.0%  58.3    0s
-H 1758   217                       3.9717064    3.32350  16.3%  39.0    0s
-H 1765   217                       3.6395677    3.32350  8.68%  38.9    0s
+     0     0    3.32350    0   46    9.35046    3.32350  64.5%     -    0s
+     0     0    3.32350    0   46    9.35046    3.32350  64.5%     -    0s
+     0     2    3.32350    0   46    9.35046    3.32350  64.5%     -    0s
+H  143   108                       8.7639547    3.32350  62.1%  73.6    0s
+H  231   140                       8.5289734    3.32350  61.0%  76.9    0s
+H  277   161                       8.0630866    3.32350  58.8%  76.0    0s
+H  363   206                       7.4212703    3.32350  55.2%  73.3    0s
+H  473   263                       7.0022121    3.32350  52.5%  69.5    0s
+H  474   263                       6.8734896    3.32350  51.6%  69.4    0s
+H  528   290                       5.7435950    3.32350  42.1%  67.7    0s
+H  693   229                       4.6004427    3.32350  27.8%  59.0    0s
+H  883    13                       4.3884799    3.32350  24.3%  47.0    0s
+H 1005    22                       3.9769822    3.32350  16.4%  42.9    0s
+H 1115    19                       3.9716314    3.32350  16.3%  40.2    0s
+H 1241    14                       3.8598208    3.32350  13.9%  37.9    0s
+H 1574   164                       3.8598108    3.32350  13.9%  32.9    0s
+H 1589   164                       3.8541544    3.32350  13.8%  32.8    0s
+* 1679   191             183       3.8540287    3.32350  13.8%  32.0    0s
+H 1911   203                       3.8254694    3.32350  13.1%  30.6    0s
+H 2195   219                       3.6407404    3.32350  8.71%  28.3    0s
+* 2196   219             200       3.6407399    3.32350  8.71%  28.3    0s
+* 2464    86             192       3.6407062    3.60933  0.86%  26.0    0s
+* 2497    86             199       3.6395677    3.60933  0.83%  25.7    0s
 
 Cutting planes:
-  Implied bound: 497
+  Implied bound: 545
   Inf proof: 5
 
-Explored 2862 nodes (82706 simplex iterations) in 0.94 seconds (1.44 work units)
+Explored 2704 nodes (66332 simplex iterations) in 0.82 seconds (1.23 work units)
 Thread count was 16 (of 16 available processors)
 
-Solution count 10: 3.63957 3.97171 4.05164 ... 6.83312
+Solution count 10: 3.63957 3.64071 3.64074 ... 3.97163
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 3.639567723358e+00, best bound 3.639567723358e+00, gap 0.0000%
+Best objective 3.639567723358e+00, best bound 3.639496856800e+00, gap 0.0019%
 
-User-callback calls 8139, time in user-callback 0.00 sec
+User-callback calls 7739, time in user-callback 0.00 sec
 partitioning
 constructing product automaton vertices
 constructing product automaton edges
 removing redundant constraints
 merging equivalent modes
-31 modes
-102 transitions
-[5, 20, 12, 8, 17, 23, 22, 6, 31, 29, 25, 4, 13, 15, 2, 10, 18, 27]
-[16, 24, 28, 30, 1, 19, 11, 9, 14, 3, 7, 21, 26]
+30 modes
+92 transitions
+[16, 20, 12, 24, 28, 30, 17, 22, 6, 9, 14, 7, 4, 2, 10, 18, 26]
+[5, 8, 1, 19, 23, 11, 3, 29, 25, 13, 15, 21, 27]
