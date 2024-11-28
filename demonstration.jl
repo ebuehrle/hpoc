@@ -64,7 +64,7 @@ contourf!(range(-0.3,0.1,100),range(-0.3,0.1,100),(s...)->v3(s...,0,0))
 scatter!(stack(X.u)[1,:],stack(X.u)[2,:],color=1,label=false,grid=false,colorbar=false)
 xlims!(-1.1,0.1)
 ylims!(-1.1,0.1)
-savefig("out/demonstration.pdf")
+#savefig("out/demonstration.pdf")
 
 mxu = monomials([x;u],0:6)
 save("out/demonstration.jld2", 

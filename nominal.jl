@@ -85,7 +85,7 @@ contourf!(range(-0.7,-0.3,100),range(-0.3,0.1,100),(s...)->v4(s...,0,0))
 scatter!(stack(X.u)[1,:],stack(X.u)[2,:],color=1,label=false,grid=false,colorbar=false)
 xlims!(-1.1,0.1)
 ylims!(-1.1,0.1)
-savefig("out/nominal-wide.pdf")
+#savefig("out/nominal-wide.pdf")
 
 plot!(ratio=:equal)
 savefig("out/nominal.pdf")

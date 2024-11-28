@@ -101,7 +101,7 @@ scatter!(stack(X.u)[1,:],stack(X.u)[2,:],color=1,label="plan",grid=false,colorba
 scatter!(stack(D)[1,:],stack(D)[2,:],color=2,alpha=0.5,label="demonstration",grid=false,colorbar=false)
 xlims!(-1.1,0.1)
 ylims!(-1.1,0.1)
-savefig("out/regularized-wide.pdf")
+#savefig("out/regularized-wide.pdf")
 
 plot!(ratio=:equal)
 savefig("out/regularized.pdf")

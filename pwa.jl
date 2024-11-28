@@ -86,7 +86,7 @@ scatter!(stack(X.u)[1,:],stack(X.u)[2,:],color=1,label=false,grid=false,colorbar
 xlims!(-1.1,0.1)
 ylims!(-1.1,0.1)
 plot!([-0.7,-0.3,-0.3,-0.7,-0.7],[-0.3,-0.3,1.1,1.1,-0.3],linewidth=2,color=:crimson,label=false)
-savefig("out/pwa.pdf")
+savefig("out/pwa-wide.pdf")
 
 plot!(ratio=:equal)
-savefig("out/pwa-equal.pdf")
+#savefig("out/pwa.pdf")
