@@ -1,4 +1,4 @@
-This is code for the paper "Optimal Control of Hybrid Systems via Occupation Measures".
+This is code for the paper "Optimal Control of Hybrid Systems via Convex Relaxations".
 
 ## Getting Started
 The code requires an installation of [MOSEK](https://www.mosek.com/) and [GUROBI](https://www.gurobi.com/).
